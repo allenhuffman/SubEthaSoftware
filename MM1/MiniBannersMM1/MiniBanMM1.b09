@@ -1,0 +1,752 @@
+PROCEDURE MiniBan
+REM *
+REM * MiniBanners09 1.01 by Allen Huffman
+REM *         Copyright (C) 1991
+REM *        by Sub-Etha Software
+REM *
+
+ON ERROR GOTO 730
+
+BASE 0
+
+REM * Define Variables
+DIM a,b,c,d,var,w:INTEGER
+DIM ch,ct,dv,ht,ln,mx,pw,sp,sw,tb,wd:BYTE
+DIM ln$(16):STRING[80]; height(16):BYTE
+DIM font$(778):STRING[1]
+DIM a$:STRING[80]; path$:STRING[32]; line$:STRING[32]
+DIM df$,ft$:STRING[8]
+DIM sn$:STRING[5]; ex$,vr$:STRING[4]
+
+dim dwend(2),dwset(12),fcolor(3),bcolor(3),border(3),clear(1):byte
+dim palette(6),curon(2),curoff(2),curxy(3),revon(2),revoff(2):byte
+dim erline(1),bell(1),ereowndw(1),ereoline(1),select(2):byte
+
+5 REM * Initialize Variables
+
+ch=219 \pw=80 \sp=0 \sw=40 \wd=2 \tb=(sw/40-1)*20
+df$="DEFAULT" \ft$="DEFAULT" \sn$="00042" \vr$="1.01"
+path$="."
+
+REM --------------------------------------------------------------------------
+
+REM * GFX2 substitute definitions:
+REM * 12/31/91 by Joel Mathew Hegberg.
+
+dwend(0)=$1b\dwend(1)=$24
+dwset(0)=$1b\dwset(1)=$20\dwset(3)=0\dwset(4)=0\dwset(6)=24\dwset(9)=$1b\dwset(10)=$34
+fcolor(0)=$1b\fcolor(1)=$32
+bcolor(0)=$1b\bcolor(1)=$33
+border(0)=$1b\border(1)=$34
+clear(0)=$0c
+palette(0)=$1b\palette(1)=$31
+curoff(0)=$05\curoff(1)=$20
+curon(0)=$05\curon(1)=$21
+curxy(0)=$02
+revon(0)=$1f\revon(1)=$20
+revoff(0)=$1f\revoff(1)=$21
+erline(0)=$03
+bell(0)=$07
+ereowndw(0)=$0b
+ereoline(0)=$04
+select(0)=$1b\select(1)=$21
+
+REM --------------------------------------------------------------------------
+
+7 REM * Make 40 column startup screen
+shell "tmode nopause"
+PRINT "MiniBanners09 V"; vr$; " by Allen C. Huffman."
+put #1,dwend
+dwset(2)=3\dwset(5)=40\dwset(7)=0\dwset(8)=2\dwset(11)=2
+put #1,dwset
+put #1,select
+fcolor(2)=0\bcolor(2)=2\border(2)=2\put #1,fcolor\put #1,bcolor\put #1,border
+put #1,select
+
+10 put #1,clear
+palette(2)=0\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=2\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=8\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+put #1,curoff
+curxy(1)=tb+10+$20\curxy(2)=0+$20\put #1,curxy
+PRINT "/) MiniBanners09! (\"
+put #1,revon
+PRINT TAB(sw+1)
+put #1,revoff
+curxy(1)=0+$20\curxy(2)=22+$20\put #1,curxy
+put #1,revon
+PRINT TAB(sw+1); 
+put #1,revoff
+curxy(1)=tb+10+$20\curxy(2)=3+$20\put #1,curxy
+PRINT "Release Version: "; vr$
+PRINT 
+PRINT TAB(tb+1); " Copyright (C) 1991 by Allen C. Huffman"
+PRINT 
+PRINT TAB(tb+19); "and"
+PRINT 
+PRINT TAB(tb+12); "Sub-Etha Software"
+PRINT TAB(tb+13); "P.O. Box 152442"
+PRINT TAB(tb+11); "Lufkin, Texas 75915"
+PRINT TAB(tb+10); "(409) 639-ETHA [3842]"
+PRINT 
+PRINT TAB(tb+8); "Support the future of OS-9."
+PRINT TAB(tb+4); "Please do not pirate this program."
+curxy(1)=tb+9+$20\curxy(2)=18+$20\put #1,curxy
+put #1,revon
+PRINT "Serial Number # "; sn$
+put #1,revoff
+curxy(1)=tb+6+$20\curxy(2)=23+$20\put #1,curxy
+30 PRINT "Load Config? [Y]es or [N]o :"; 
+RUN mbinput(a$,1,1)
+IF a$<>"Y" THEN 40
+curxy(1)=tb+7+$20\curxy(2)=20+$20\put #1,curxy
+PRINT "Checking Configuration..."; 
+GOSUB 755
+40 REM - was Gosub to Baud Set routine
+50 REM * Main Menu
+55 put #1,clear
+palette(2)=0\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=2\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=8\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+put #1,curoff
+curxy(1)=tb+8+$20\curxy(2)=0+$20\put #1,curxy
+PRINT "/) MiniBanners09! "; vr$; " (\"
+put #1,revon
+PRINT TAB(sw+1)
+put #1,revoff
+curxy(1)=0+$20\curxy(2)=22+$20\put #1,curxy
+put #1,revon
+PRINT TAB(sw+1); 
+put #1,revoff
+curxy(1)=tb+11+$20\curxy(2)=6+$20\put #1,curxy
+PRINT "[1] Print a Banner"
+PRINT 
+PRINT TAB(tb+12); "[2] Select Font ("; ft$; ")"
+PRINT 
+PRINT TAB(tb+12); "[3] Configuration"
+curxy(1)=0+$20\curxy(2)=17+$20\put #1,curxy
+PRINT TAB(tb+12); "[W] Toggle 40/80"
+PRINT 
+PRINT TAB(tb+12); "[X] Exit to OS-9"
+curxy(1)=tb+13+$20\curxy(2)=23+$20\put #1,curxy
+PRINT "Enter Function"; 
+70 curxy(1)=tb+17+$20\curxy(2)=3+$20\put #1,curxy
+PRINT "[P]ath:"
+put #1,erline
+IF path$="." THEN 
+PRINT TAB(tb+13); "Current Directory"
+ELSE 
+PRINT TAB(tb+20-LEN(path$)/2); path$
+ENDIF 
+75 RUN mbinput(a$,1,1)
+a=SUBSTR(a$,"123PWX")
+IF a=0 OR a$="" THEN
+put #1,bell
+GOTO 75
+ENDIF 
+ON a GOTO 105,205,305,85,90,95
+85 REM - Change Path
+curxy(1)=0+$20\curxy(2)=4+$20\put #1,curxy
+put #1,erline
+curxy(1)=tb+4+$20\curxy(2)=4+$20\put #1,curxy
+PRINT "................................"
+curxy(1)=tb+4+$20\curxy(2)=4+$20\put #1,curxy
+RUN mbinput(a$,32,1)
+IF a$<>"" THEN
+path$=a$
+ENDIF
+GOTO 70
+90 REM - 40/80 toggle
+IF sw=40 THEN 
+sw=80
+put #1,dwend
+dwset(2)=0\dwset(5)=80\dwset(7)=1\dwset(8)=0\dwset(11)=0
+put #1,dwset
+put #1,select
+fcolor(2)=0\bcolor(2)=2\border(2)=2\put #1,fcolor\put #1,bcolor\put #1,border
+ELSE 
+sw=40
+put #1,dwend
+dwset(2)=3\dwset(5)=40\dwset(7)=1\dwset(8)=0\dwset(11)=0
+put #1,dwset
+put #1,select
+fcolor(2)=0\bcolor(2)=2\border(2)=2\put #1,fcolor\put #1,bcolor\put #1,border
+ENDIF 
+tb=(sw/40-1)*20
+GOTO 55
+95 REM - Exit to OS-9
+curxy(1)=tb+5+$20\curxy(2)=23+$20\put #1,curxy
+PRINT "Exit Banners? [Y]es or [N]o :"; 
+RUN mbinput(a$,1,1)
+IF a$<>"Y" THEN 55
+put #1,clear
+curxy(1)=tb+3+$20\curxy(2)=0+$20\put #1,curxy
+put #1,dwend
+dwset(2)=0\dwset(5)=80\dwset(6)=26\dwset(7)=0\dwset(8)=2\dwset(11)=2
+put #1,dwset
+put #1,clear
+put #1,curon
+put #1,select
+fcolor(2)=$0f\bcolor(2)=2\border(2)=0\put #1,fcolor\put #1,bcolor\put #1,border
+print chr$($1b);chr$($30);
+PRINT "Thank You for using MiniBanners09!"
+put #1,revon
+PRINT TAB(sw+1)
+put #1,revoff
+put #1,curon
+END 
+
+100 REM * Print a Banner
+105 put #1,clear
+palette(2)=0\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=2\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=8\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+curxy(1)=tb+10+$20\curxy(2)=0+$20\put #1,curxy
+PRINT "/) Print a Banner (\"
+put #1,revon
+PRINT " "; 
+FOR a=1 TO sw/10-1
+PRINT "----|----"; a; 
+NEXT a
+PRINT "----|--- "
+put #1,revoff
+110 curxy(1)=tb+8+$20\curxy(2)=2+$20\put #1,curxy
+PRINT "Printer Width ["; 
+PRINT USING "I4",pw; 
+PRINT "] :"; 
+RUN mbinput(a$,3,2)
+a=VAL(a$)
+IF a=0 THEN 
+a=pw
+ENDIF 
+IF a<32 OR a>132 THEN 
+GOTO 110
+ELSE 
+pw=a
+ENDIF 
+112 curxy(1)=tb+8+$20\curxy(2)=3+$20\put #1,curxy
+PRINT "Font Width    ["; 
+PRINT USING "I4",wd; 
+PRINT "] :"; 
+RUN mbinput(a$,2,2)
+a=VAL(a$)
+IF a>0 AND a<20 THEN 
+wd=a
+ENDIF
+113 curxy(1)=tb+8+$20\curxy(2)=4+$20\put #1,curxy
+PRINT "Line Spacing  ["; 
+PRINT USING "I4",sp; 
+PRINT "] :"; 
+RUN mbinput(a$,2,2)
+IF a$="" THEN 114
+a=VAL(a$)
+IF a>=0 AND a<20 THEN 
+sp=a
+ENDIF
+114 curxy(1)=tb+8+$20\curxy(2)=5+$20\put #1,curxy
+PRINT "Ptr Character ["; 
+PRINT USING "I4",ch; 
+PRINT "] :"; 
+RUN mbinput(a$,3,3)
+IF a$="" THEN 115
+ch=VAL(a$)
+115 b=0 \ct=0 \ht=INT(pw/(8+sp)) \ln=0 \mx=0
+curxy(1)=0+$20\curxy(2)=2+$20\put #1,curxy
+put #1,ereowndw
+PRINT 
+curxy(1)=0+$20\curxy(2)=6+$20\put #1,curxy
+put #1,revon
+PRINT " Ln Ht Text  PW="; pw; " WD="; wd; " SP="; sp; " CH="; ch
+; 
+PRINT TAB(sw+1); 
+put #1,revoff
+120 curxy(1)=0+$20\curxy(2)=3+$20\put #1,curxy
+put #1,erline
+PRINT ">"; 
+RUN mbinput(a$,78,0)
+IF a$="" THEN 
+IF ln=0 THEN 
+GOTO 55
+ELSE 
+ln=ln-1
+GOTO 140
+ENDIF 
+ENDIF 
+125 ln$(ln)=a$
+IF LEN(a$)>mx THEN mx=LEN(a$)
+ENDIF 
+130 curxy(1)=tb+12+$20\curxy(2)=4+$20\put #1,curxy
+put #1,erline
+PRINT "Height ["; 
+PRINT USING "I3",ht; 
+PRINT "] :"; 
+RUN mbinput(a$,2,2)
+a=VAL(a$)
+IF a=0 THEN 
+a=ht
+ENDIF 
+IF a<1 OR a>ht THEN 
+GOTO 130
+ELSE 
+height(ln)=a
+ht=ht-a
+b=b+a*8+sp
+ENDIF 
+135 curxy(1)=0+$20\curxy(2)=7+ln+$20\put #1,curxy
+PRINT USING "I3<",ln+1,height(ln); 
+PRINT " "; LEFT$(ln$(ln),sw-8)
+IF ht>0 THEN 
+ln=ln+1
+GOTO 120
+ENDIF 
+140 ct=(pw-b)/2+sp/2
+IF ht>0 THEN 
+curxy(1)=tb+6+$20\curxy(2)=23+$20\put #1,curxy
+PRINT "Center from Top to Bottom?"; 
+RUN mbinput(a$,1,1)
+IF a$<>"Y" THEN 
+ct=0
+ENDIF 
+ENDIF 
+150 FOR a=0 TO ln
+WHILE LEN(ln$(a))<mx DO 
+ln$(a)=" "+ln$(a)+" "
+ENDWHILE 
+ln$(a)=LEFT$(ln$(a),mx)
+curxy(1)=7+$20\curxy(2)=7+a+$20\put #1,curxy
+PRINT LEFT$(ln$(a),sw-8)
+NEXT a
+155 curxy(1)=tb+6+$20\curxy(2)=23+$20\put #1,curxy
+PRINT "PRINT - Is Everything Okay?"; 
+RUN mbinput(a$,1,1)
+IF a$<>"Y" THEN 105
+156 REM - Try to load in font
+ON ERROR GOTO 157
+OPEN #dv,path$+"/"+ft$+".fnt":READ
+GET #dv,font$
+CLOSE #dv
+GOTO 158
+157 REM - Error opening Font
+ON ERROR GOTO 730
+curxy(1)=tb+2+$20\curxy(2)=23+$20\put #1,curxy
+put #1,bell
+PRINT "Error Loading Font - Press [ENTER]"; 
+RUN mbinput(a$,1,1)
+GOTO 55
+158 REM - Try to open printer
+ON ERROR GOTO 159
+OPEN #dv,"/p":WRITE
+REM dv=1  * for screen test
+GOTO 160
+159 REM - Error opening Printer
+ON ERROR GOTO 730
+curxy(1)=tb+6+$20\curxy(2)=23+$20\put #1,curxy
+PRINT " Ready Printer or Press [X]"; 
+RUN mbinput(a$,1,1)
+IF a$="X" THEN 55
+GOTO 155
+160 curxy(1)=tb+6+$20\curxy(2)=23+$20\put #1,curxy
+PRINT " PRINTING - [BREAK] to Stop "; 
+PRINT #dv
+PRINT #dv,TAB(pw/2-14); "/) MiniBanners09 "; vr$; " SN#"; sn$; " (\"
+165 PRINT #dv
+FOR a=1 TO mx
+FOR b=7 TO 0 STEP -1
+FOR w=1 TO wd
+PRINT #dv,TAB(ct); 
+FOR c=ln TO 0 STEP -1
+lt=ASC(MID$(ln$(c),a,1))-32
+FOR d=7 TO 0 STEP -1
+IF LAND(ASC(font$(5+lt*8+d)),2^b)>0 THEN 
+FOR var=1 TO height(c)
+PRINT #dv,CHR$(ch); 
+NEXT var
+ELSE 
+FOR var=1 TO height(c)
+PRINT #dv," "; 
+NEXT var
+ENDIF 
+NEXT d
+IF ln>0 AND c>0 THEN 
+FOR var=1 TO sp
+PRINT #dv," "; 
+NEXT var
+ENDIF 
+NEXT c
+PRINT #dv
+NEXT w
+NEXT b
+NEXT a
+CLOSE #dv
+GOTO 55
+
+200 REM * Select Font
+205 put #1,clear
+palette(2)=0\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=2\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=8\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+curxy(1)=tb+12+$20\curxy(2)=0+$20\put #1,curxy
+PRINT "/) Select Font (\"
+put #1,revon
+PRINT TAB(sw+1)
+put #1,revoff
+curxy(1)=0+$20\curxy(2)=22+$20\put #1,curxy
+put #1,revon
+PRINT TAB(sw+1); 
+put #1,revoff
+210 ex$="fnt"
+GOSUB 930
+IF a$="" THEN 55
+GOSUB 840
+IF a=0 THEN 
+GOTO 210
+ELSE 
+ft$=a$
+ENDIF 
+GOTO 55
+
+300 REM * Configuration
+305 put #1,clear
+palette(2)=0\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=2\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=8\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+curxy(1)=tb+10+$20\curxy(2)=0+$20\put #1,curxy
+PRINT "/) Configuration (\"
+put #1,revon
+PRINT TAB(sw+1)
+put #1,revoff
+curxy(1)=0+$20\curxy(2)=22+$20\put #1,curxy
+put #1,revon
+PRINT TAB(sw+1); 
+put #1,revoff
+curxy(1)=tb+11+$20\curxy(2)=3+$20\put #1,curxy
+PRINT "Current Settings:"
+PRINT 
+PRINT TAB(tb+1); "Printer Width: "; pw
+PRINT 
+PRINT TAB(tb+1); "Printer Baud : N/A"
+PRINT 
+PRINT TAB(tb+1); "Font Width   : "; wd
+PRINT 
+PRINT TAB(tb+1); "Line Spacing : "; sp
+PRINT 
+PRINT TAB(tb+1); "Banner Char. : "; ch
+PRINT 
+PRINT TAB(tb+1); "Default Font : "; df$
+315 curxy(1)=tb+2+$20\curxy(2)=23+$20\put #1,curxy
+PRINT "[E]dit [L]oad [S]ave or [X]it Config"; 
+RUN mbinput(a$,1,1)
+a=SUBSTR(a$,"ELSX")
+IF a$="" OR a=0 THEN 315
+IF a=4 THEN 55
+IF a=2 THEN 
+GOSUB 755
+GOTO 305
+ENDIF 
+IF a=3 THEN 
+GOSUB 780
+GOTO 305
+ENDIF 
+325 curxy(1)=tb+2+$20\curxy(2)=20+$20\put #1,curxy
+PRINT "Enter your printer's carraige width."
+curxy(1)=tb+15+$20\curxy(2)=5+$20\put #1,curxy
+RUN mbinput(a$,3,2)
+a=VAL(a$)
+IF a>32 AND a<132 THEN 
+pw=a
+ENDIF 
+330 REM *** Should be place to print/input baud rate...not needed.
+curxy(1)=tb+15+$20\curxy(2)=5+$20\put #1,curxy
+put #1,ereoline
+PRINT pw
+335 curxy(1)=tb+15+$20\curxy(2)=7+$20\put #1,curxy
+PRINT "N/A"
+curxy(1)=tb+2+$20\curxy(2)=20+$20\put #1,curxy
+PRINT "Enter default font width for banners."
+curxy(1)=tb+15+$20\curxy(2)=9+$20\put #1,curxy
+RUN mbinput(a$,2,2)
+a=VAL(a$)
+IF a>0 AND a<10 THEN 
+wd=a
+ENDIF 
+340 curxy(1)=tb+15+$20\curxy(2)=9+$20\put #1,curxy
+put #1,ereoline
+PRINT wd
+curxy(1)=tb+2+$20\curxy(2)=20+$20\put #1,curxy
+PRINT " Enter spacing between banner lines. "
+curxy(1)=tb+15+$20\curxy(2)=11+$20\put #1,curxy
+RUN mbinput(a$,2,2)
+a=VAL(a$)
+IF a$="" THEN 345
+IF a>=0 AND a<20 THEN 
+sp=a
+ENDIF 
+345 curxy(1)=tb+15+$20\curxy(2)=11+$20\put #1,curxy
+put #1,ereoline
+PRINT sp
+curxy(1)=tb+2+$20\curxy(2)=20+$20\put #1,curxy
+PRINT "Enter ASCII value of char. to print. "
+curxy(1)=tb+15+$20\curxy(2)=13+$20\put #1,curxy
+RUN mbinput(a$,3,2)
+a=VAL(a$)
+IF a>32 AND a<256 THEN 
+ch=a
+ENDIF 
+350 curxy(1)=tb+15+$20\curxy(2)=13+$20\put #1,curxy
+put #1,ereoline
+PRINT ch
+curxy(1)=tb+2+$20\curxy(2)=20+$20\put #1,curxy
+PRINT " Enter font name to load on startup. "
+curxy(1)=tb+15+$20\curxy(2)=15+$20\put #1,curxy
+RUN mbinput(a$,8,1)
+IF a$<>"" THEN 
+df$=a$
+ENDIF 
+395 GOTO 305
+
+700 REM * Break Detected
+705 REM --- This is no longer in use...but the next line is!
+710 curxy(1)=tb+4+$20\curxy(2)=13+$20\put #1,curxy
+PRINT "[ENTER] to Restart, [X] to Exit:"; 
+RUN mbinput(a$,1,1)
+IF a$="X" THEN 95
+GOTO 5
+725 REM * Error Detected :(
+730 put #1,clear
+palette(2)=0\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=2\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=8\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+curxy(1)=tb+10+$20\curxy(2)=0+$20\put #1,curxy
+PRINT "/) Error Detected (\"
+put #1,revon
+PRINT TAB(sw+1)
+put #1,revoff
+curxy(1)=tb+9+$20\curxy(2)=4+$20\put #1,curxy
+PRINT "[ Error "; ERR; " reported! ]"
+PRINT 
+PRINT TAB(tb+1); " Honestly, I thought I had it bug-free!"
+PRINT 
+PRINT TAB(tb+1); "   If this was something other than a"
+PRINT TAB(tb+1); "   Disk Full or I/O Error, please let"
+PRINT TAB(tb+1); "   us know so we may exterminate it."
+GOTO 710
+END 
+
+750 REM * Load Configuration
+755 ON ERROR GOTO 770
+OPEN #dv,path$+"/miniban.cfg":READ
+INPUT #dv,ch
+INPUT #dv,pw
+INPUT #dv,sp
+INPUT #dv,wd
+INPUT #dv,df$
+INPUT #dv,sw
+CLOSE #dv
+a$=ft$ \ex$="fnt"
+GOSUB 840
+IF a=1 THEN 
+ft$=df$
+ENDIF 
+ON ERROR GOTO 730
+tb=(sw/40-1)*20
+REM - BRUTE FORCE way to set screen to whatever config says...
+IF sw=40 THEN 
+sw=80
+ELSE 
+sw=40
+ENDIF 
+GOTO 90
+RETURN 
+770 REM - Error loading config
+ON ERROR GOTO 730
+curxy(1)=tb+2+$20\curxy(2)=23+$20\put #1,curxy
+put #1,bell
+PRINT "Error Loading Config - Press [Enter]"; 
+RUN mbinput(a$,1,1)
+put #1,erline
+RETURN 
+
+775 REM * Save Configuration
+780 a$="miniban" \ex$="cfg"
+GOSUB 840
+IF a=1 THEN 
+SHELL "del miniban.cfg"
+ENDIF 
+ON ERROR GOTO 785
+CREATE #dv,"miniban.cfg":WRITE
+PRINT #dv,ch
+PRINT #dv,pw
+PRINT #dv,sp
+PRINT #dv,wd
+PRINT #dv,df$
+PRINT #dv,sw
+CLOSE #dv
+ON ERROR GOTO 730
+RETURN 
+785 REM - Error saving config
+ON ERROR GOTO 730
+curxy(1)=tb+2+$20\curxy(2)=23+$20\put #1,curxy
+PRINT " Error Saving Config - Press [ENTER]"; 
+RUN mbinput(a$,1,1)
+put #1,erline
+RETURN 
+
+800 REM * Directory Subroutine
+805 GOSUB 855
+c=0
+ON ERROR GOTO 830
+OPEN #dv,path$:READ+DIR
+WHILE EOF(#dv)=FALSE DO 
+GET #dv,line$
+b=SUBSTR(".fn"+CHR$($F4),line$)
+IF b>0 AND LEFT$(line$,1)<>CHR$(0) THEN 
+PRINT "   "; LEFT$(line$,b-1); LEFT$("            ",11-b); 
+c=c+1
+IF POS>sw-2 THEN 
+PRINT 
+ENDIF 
+IF c=48*(sw/40) THEN 
+curxy(1)=tb+2+$20\curxy(2)=23+$20\put #1,curxy
+PRINT "Press [ENTER] for More, [X] to Stop:"; 
+RUN mbinput(a$,1,1)
+curxy(1)=0+$20\curxy(2)=23+$20\put #1,curxy
+put #1,erline
+IF a$="X" THEN 
+RETURN 
+ENDIF 
+GOSUB 855
+c=0
+ENDIF 
+ENDIF 
+ENDWHILE 
+CLOSE #dv
+RETURN 
+830 REM - Error reading directory
+ON ERROR GOTO 730
+curxy(1)=tb+2+$20\curxy(2)=23+$20\put #1,curxy
+put #1,bell
+PRINT "Error Reading DIR - Press [ENTER]"; 
+RUN mbinput(a$,1,1)
+put #1,erline
+RETURN 
+
+835 REM * Verify File Name
+840 ON ERROR GOTO 845
+a=1
+OPEN #dv,path$+"/"+a$+"."+ex$:READ
+CLOSE #dv
+ON ERROR GOTO 730
+RETURN 
+845 a=0
+put #1,bell
+ON ERROR GOTO 730
+RETURN 
+
+850 REM * Clear Screen Sub
+855 FOR c=0 TO 15
+curxy(1)=0+$20\curxy(2)=6+c+$20\put #1,curxy
+put #1,erline
+NEXT c
+PRINT 
+curxy(1)=0+$20\curxy(2)=6+$20\put #1,curxy
+RETURN 
+
+875 REM * Baud Rate Routine
+880 RETURN 
+
+925 REM * Load from Disk...
+930 curxy(1)=tb+5+$20\curxy(2)=3+$20\put #1,curxy
+PRINT "Enter Font Name, [D]irectory,"
+PRINT TAB(tb+6); "or [P]review: ........"
+curxy(1)=tb+19+$20\curxy(2)=4+$20\put #1,curxy
+RUN mbinput(a$,8,1)
+IF a$="" THEN 
+RETURN 
+ELSE 
+IF LEN(a$)>8 THEN 930
+ENDIF 
+935 IF a$="D" THEN 
+GOSUB 805
+GOTO 930
+ELSE 
+IF a$="P" THEN 
+GOSUB 950
+GOTO 930
+ENDIF 
+ENDIF 
+RETURN 
+945 REM * Font Preview
+950 curxy(1)=tb+2+$20\curxy(2)=23+$20\put #1,curxy
+put #1,bell
+PRINT " Font Preview not supported in V"; vr$; 
+RETURN 
+
+5000 REM 
+5001 REM V0.1 - Program Began 6/2/91
+5002 REM V0.2 - Program "done" 6/6/91 - bugs fixed
+5003 REM V1.0 - Creates own screens, toggles width, palette trick 9/16/91
+5004 REM V1.01 - Enhanced version number 10/10/91
+5005 REM V1.01 - MM/1 conversion completed 12/31/91 by Joel Mathew Hegberg.
+
+PROCEDURE MBinput
+REM *
+REM * MiniBanners Input Routine
+REM *
+REM * 0=Normal as typed, 1=Force Uppercase, 2=Accept Numbers Only
+REM *
+
+PARAM line$:STRING[80]; length,kind:INTEGER
+DIM char$:STRING[1]
+dim curon(2),curoff(2),palette(6):byte
+
+base 0
+ON ERROR GOTO 100
+
+curon(0)=$05\curon(1)=$21
+curoff(0)=$05\curoff(1)=$20
+palette(0)=$1b\palette(1)=$31
+ 
+SHELL "Tmode noecho"
+palette(2)=8\palette(3)=$ff\palette(4)=$ff\palette(5)=$ff\pu #1,palette
+palette(2)=2\palette(3)=0\palette(4)=0\palette(5)=0\put #1,palette
+palette(2)=0\palette(3)=$ff\palette(4)=$ff\palette(5)=$ff\put #1,palette
+IF length>1 THEN 
+put #1,curon
+ENDIF 
+line$=""
+LOOP 
+GET #0,char$
+EXITIF char$=CHR$(13) THEN 
+IF lengthu<>1 THEN 
+put #1,curoff
+ENDIF 
+ENDEXIT 
+IF char$=CHR$(8) THEN 
+IF line$<>"" THEN 
+line$=LEFT$(line$,LEN(line$)-1)
+PRINT CHR$(8); " "; CHR$(8); 
+ENDIF 
+ELSE 
+IF LEN(line$)<length AND ASC(char$)>31 AND ASC(char$)<128 THEN 
+IF kind=1 AND (ASC(char$)>96 AND ASC(char$)<123) THEN 
+char$=CHR$(ASC(char$)-32)
+ELSE 
+IF kind=2 AND (ASC(char$)<48 OR ASC(char$)>57) THEN 
+char$=""
+ENDIF 
+ENDIF 
+line$=line$+char$
+IF length<>1 THEN 
+PRINT char$; 
+ENDIF 
+ENDIF 
+ENDIF 
+EXITIF LEN(line$)=1 AND length=1 THEN 
+ENDEXIT 
+ENDLOOP 
+IF kind=2 AND line$="" THEN 
+line$="0"
+ENDIF 
+100 SHELL "Tmode echo"
+END 
+

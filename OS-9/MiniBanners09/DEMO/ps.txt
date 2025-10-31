@@ -1,0 +1,6 @@
+By the way, the sample banners created with this demo are not nearly as good
+as what the program is capable of.  Some experimentation is really needed to
+produce the best results.
+ 
+Be sure to see the review of the RS-DOS version (functionally identical) in
+the October 1991 Rainbow magazine, page 54.

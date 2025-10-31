@@ -1,0 +1,718 @@
+PROCEDURE MBanDemo
+REM *
+REM * MiniBanners09 1.01 by Allen Huffman
+REM *         Copyright (C) 1991
+REM *        by Sub-Etha Software
+REM *
+REM *            DEMO VERSION
+
+ON ERROR GOTO 730
+
+BASE 0
+
+REM * Define Variables
+DIM a,b,c,d,var,w:INTEGER
+DIM ch,ct,dv,ht,ln,mx,pw,sp,sw,tb,wd:BYTE
+DIM ln$(16):STRING[80]; height(16):BYTE
+DIM font$(778):STRING[1]
+DIM a$:STRING[80]; path$:STRING[32]; line$:STRING[32]
+DIM df$,ft$:STRING[8]
+DIM sn$:STRING[5]; ex$,vr$:STRING[4]
+DIM demo:REAL
+
+5 REM * Initialize Variables
+
+ch=219 \pw=80 \sp=0 \sw=40 \wd=2 \tb=(sw/40-1)*20
+df$="DEFAULT" \ft$="DEFAULT" \sn$="00042" \vr$="1.01"
+path$="."
+
+7 REM * Make 40 column startup screen
+PRINT "MiniBanners09 V"; vr$; " by Allen C. Huffman."
+RUN gfx2("dwend")
+RUN gfx2("dwset",1,0,0,40,24,0,2,2)
+RUN gfx2("color",0,2,2)
+
+10 RUN gfx2("clear")
+REM RUN gfx2("palette",0,0)
+RUN gfx2("palette",8,0)
+RUN gfx2("curoff")
+RUN gfx2("curxy",tb+10,0)
+PRINT "/) MiniBanners09! (\"
+RUN gfx2("revon")
+PRINT TAB(sw+1)
+RUN gfx2("revoff")
+RUN gfx2("curxy",0,22)
+RUN gfx2("revon")
+PRINT TAB(sw+1); 
+RUN gfx2("revoff")
+RUN gfx2("curxy",tb+11,3)
+PRINT "DEMO Version: "; vr$
+PRINT 
+PRINT TAB(tb+1); " Copyright (C) 1991 by Allen C. Huffman"
+PRINT 
+PRINT TAB(tb+19); "and"
+PRINT 
+PRINT TAB(tb+12); "Sub-Etha Software"
+PRINT TAB(tb+13); "P.O. Box 152442"
+PRINT TAB(tb+11); "Lufkin, Texas 75915"
+PRINT TAB(tb+10); "(409) 639-ETHA [3842]"
+PRINT 
+PRINT TAB(tb+8); "OS9/OSK Midwest Division:"
+PRINT TAB(tb+13); "(815) 748-6638"
+PRINT 
+PRINT TAB(tb+5); "This DEMO VERSION may be freely"
+PRINT TAB(tb+4); "distributed - NOT FULLY FUNCTIONAL"
+RUN gfx2("curxy",tb+6,23)
+30 PRINT "Load Config? [Y]es or [N]o :"; 
+RUN mbinput(a$,1,1)
+IF a$<>"Y" THEN 40
+RUN gfx2("curxy",tb+7,20)
+RUN gfx2("blnkon")
+PRINT "Checking Configuration..."; 
+RUN gfx2("blnkoff")
+GOSUB 755
+40 REM - was Gosub to Baud Set routine
+50 REM * Main Menu
+55 RUN gfx2("clear")
+REM RUN gfx2("palette",0,0)
+RUN gfx2("palette",8,0)
+RUN gfx2("curoff")
+RUN gfx2("curxy",tb+8,0)
+PRINT "/) MiniBanners09! "; vr$; " (\"
+RUN gfx2("revon")
+PRINT TAB(sw+1)
+RUN gfx2("revoff")
+RUN gfx2("curxy",0,22)
+RUN gfx2("revon")
+PRINT TAB(sw+1); 
+RUN gfx2("revoff")
+RUN gfx2("curxy",tb+11,6)
+PRINT "[1] Print a Banner"
+PRINT 
+PRINT TAB(tb+12); "[2] Select Font ("; ft$; ")"
+PRINT 
+PRINT TAB(tb+12); "[3] Configuration"
+RUN gfx2("curxy",0,17)
+PRINT TAB(tb+12); "[W] Toggle 40/80"
+PRINT 
+PRINT TAB(tb+12); "[X] Exit to OS-9"
+RUN gfx2("curxy",tb+13,23)
+PRINT "Enter Function"; 
+70 RUN gfx2("curxy",tb+17,3)
+PRINT "[P]ath:"
+RUN gfx2("erline")
+IF path$="." THEN 
+PRINT TAB(tb+13); "Current Directory"
+ELSE 
+PRINT TAB(tb+20-LEN(path$)/2); path$
+ENDIF 
+75 RUN mbinput(a$,1,1)
+a=SUBSTR(a$,"123PWX")
+IF a=0 OR a$="" THEN 
+RUN gfx2("bell")
+GOTO 75
+ENDIF 
+ON a GOTO 105,205,305,85,90,95
+85 REM - Change Path
+RUN gfx2("curxy",0,4)
+RUN gfx2("erline")
+RUN gfx2("curxy",tb+4,4)
+PRINT "................................"
+RUN gfx2("curxy",tb+4,4)
+RUN mbinput(a$,32,1)
+IF a$<>"" THEN 
+path$=a$
+ENDIF 
+GOTO 70
+90 REM - 40/80 toggle
+IF sw=40 THEN 
+sw=80
+RUN gfx2("dwend")
+RUN gfx2("dwset",2,0,0,80,24,1,0,0)
+RUN gfx2("color",0,2,2)
+ELSE 
+sw=40
+RUN gfx2("dwend")
+RUN gfx2("dwset",1,0,0,40,24,1,0,0)
+RUN gfx2("color",0,2,2)
+ENDIF 
+tb=(sw/40-1)*20
+GOTO 55
+95 REM - Exit to OS-9
+RUN gfx2("curxy",tb+5,23)
+PRINT "Exit Banners? [Y]es or [N]o :"; 
+RUN mbinput(a$,1,1)
+IF a$<>"Y" THEN 55
+RUN gfx2("clear")
+RUN gfx2("curxy",tb+3,0)
+PRINT "Thank You for using MiniBanners09!"
+RUN gfx2("revon")
+PRINT TAB(sw+1)
+RUN gfx2("revoff")
+PRINT TAB(tb+2); "MiniBanners is available for RS-DOS or"
+PRINT TAB(tb+2); "OS-9.  Over 30 fonts are included with"
+PRINT TAB(tb+11); "the release version."
+PRINT 
+PRINT TAB(tb+4); "To order, send $19.95+2.50 S&H to"
+PRINT 
+PRINT TAB(tb+12); "Sub-Etha Software"
+PRINT TAB(tb+13); "P.O. Box 152442"
+PRINT TAB(tb+11); "Lufkin, Texas 75915"
+PRINT 
+PRINT TAB(tb+5); "(409) 639-3842 or (815) 749-6638"
+PRINT 
+PRINT TAB(tb+6); "Specify OS-9 or RS-DOS version."
+PRINT 
+PRINT TAB(tb+3); "Be sure to check out CheckBook+09 by"
+PRINT TAB(tb+4); "Joel Mathew Hegberg.  OSK versions"
+PRINT TAB(tb+4); "available soon.   Call for status!"
+PRINT 
+PRINT TAB(tb+5); "Press any key to return to OS-9:"; 
+RUN mbinput(line,1,1)
+RUN gfx2("curon")
+END 
+
+100 REM * Print a Banner
+105 RUN gfx2("clear")
+REM RUN gfx2("palette",0,0)
+RUN gfx2("palette",8,0)
+RUN gfx2("curxy",tb+10,0)
+PRINT "/) Print a Banner (\"
+RUN gfx2("revon")
+PRINT " "; 
+FOR a=1 TO sw/10-1
+PRINT "----|----"; a; 
+NEXT a
+PRINT "----|--- "
+RUN gfx2("revoff")
+110 RUN gfx2("curxy",tb+8,2)
+PRINT "Printer Width ["; 
+PRINT USING "I4",pw; 
+PRINT "] :"; 
+RUN mbinput(a$,3,2)
+a=VAL(a$)
+IF a=0 THEN 
+a=pw
+ENDIF 
+IF a<32 OR a>132 THEN 
+GOTO 110
+ELSE 
+pw=a
+ENDIF 
+112 RUN gfx2("curxy",tb+8,3)
+PRINT "Font Width    ["; 
+PRINT USING "I4",wd; 
+PRINT "] :"; 
+RUN mbinput(a$,2,2)
+a=VAL(a$)
+IF a>0 AND a<20 THEN 
+wd=a
+ENDIF 
+113 RUN gfx2("curxy",tb+8,4)
+PRINT "Line Spacing  ["; 
+PRINT USING "I4",sp; 
+PRINT "] :"; 
+RUN mbinput(a$,2,2)
+IF a$="" THEN 114
+a=VAL(a$)
+IF a>=0 AND a<20 THEN 
+sp=a
+ENDIF 
+114 RUN gfx2("curxy",tb+8,5)
+PRINT "Ptr Character ["; 
+PRINT USING "I4",ch; 
+PRINT "] :"; 
+RUN mbinput(a$,3,3)
+IF a$="" THEN 115
+ch=VAL(a$)
+115 b=0 \ct=0 \ht=INT(pw/(8+sp)) \ln=0 \mx=0
+RUN gfx2("curxy",0,2)
+RUN gfx2("ereowndw")
+PRINT 
+RUN gfx2("curxy",0,6)
+RUN gfx2("revon")
+PRINT " Ln Ht Text  PW="; pw; " WD="; wd; " SP="; sp; " CH="; ch
+; 
+PRINT TAB(sw+1); 
+RUN gfx2("revoff")
+120 RUN gfx2("curxy",0,3)
+RUN gfx2("erline")
+PRINT ">"; 
+RUN mbinput(a$,78,0)
+IF a$="" THEN 
+IF ln=0 THEN 
+GOTO 55
+ELSE 
+ln=ln-1
+GOTO 140
+ENDIF 
+ENDIF 
+REM - Demo Message Code
+demo=ln
+IF demo/2=INT(demo/2) THEN 
+a$="MiniBanners09 by Allen Huffman"
+ELSE 
+a$="=> Sub-Etha Software! <="
+ENDIF 
+REM - End of Demo Message Code
+125 ln$(ln)=a$
+IF LEN(a$)>mx THEN mx=LEN(a$)
+ENDIF 
+130 RUN gfx2("curxy",tb+12,4)
+RUN gfx2("erline")
+PRINT "Height ["; 
+PRINT USING "I3",ht; 
+PRINT "] :"; 
+RUN mbinput(a$,2,2)
+a=VAL(a$)
+IF a=0 THEN 
+a=ht
+ENDIF 
+IF a<1 OR a>ht THEN 
+GOTO 130
+ELSE 
+height(ln)=a
+ht=ht-a
+b=b+a*8+sp
+ENDIF 
+135 RUN gfx2("curxy",0,7+ln)
+PRINT USING "I3<",ln+1,height(ln); 
+PRINT " "; LEFT$(ln$(ln),sw-8)
+IF ht>0 THEN 
+ln=ln+1
+GOTO 120
+ENDIF 
+140 ct=(pw-b)/2+sp/2
+IF ht>0 THEN 
+RUN gfx2("curxy",tb+6,23)
+PRINT "Center from Top to Bottom?"; 
+RUN mbinput(a$,1,1)
+IF a$<>"Y" THEN 
+ct=0
+ENDIF 
+ENDIF 
+150 FOR a=0 TO ln
+WHILE LEN(ln$(a))<mx DO 
+ln$(a)=" "+ln$(a)+" "
+ENDWHILE 
+ln$(a)=LEFT$(ln$(a),mx)
+RUN gfx2("curxy",7,7+a)
+PRINT LEFT$(ln$(a),sw-8)
+NEXT a
+155 RUN gfx2("curxy",tb+6,23)
+PRINT "PRINT - Is Everything Okay?"; 
+RUN mbinput(a$,1,1)
+IF a$<>"Y" THEN 105
+156 REM - Try to load in font
+ON ERROR GOTO 157
+OPEN #dv,path$+"/"+ft$+".fnt":READ
+GET #dv,font$
+CLOSE #dv
+GOTO 158
+157 REM - Error opening Font
+ON ERROR GOTO 730
+RUN gfx2("curxy",tb+2,23)
+RUN gfx2("bell")
+PRINT "Error Loading Font - Press [ENTER]"; 
+RUN mbinput(a$,1,1)
+GOTO 55
+158 REM - Try to open printer
+ON ERROR GOTO 159
+OPEN #dv,"/P":WRITE
+GOTO 160
+159 REM - Error opening Printer
+ON ERROR GOTO 730
+RUN gfx2("curxy",tb+6,23)
+PRINT " Ready Printer or Press [X]"; 
+RUN mbinput(a$,1,1)
+IF a$="X" THEN 55
+GOTO 155
+160 RUN gfx2("curxy",tb+6,23)
+PRINT " PRINTING - [BREAK] to Stop "; 
+PRINT #dv
+PRINT #dv,TAB(pw/2-14); "/) MiniBanners09 "; vr$; " SN#"; sn$; " (\"
+165 PRINT #dv
+FOR a=1 TO mx
+FOR b=7 TO 0 STEP -1
+FOR w=1 TO wd
+PRINT #dv,TAB(ct); 
+FOR c=ln TO 0 STEP -1
+lt=ASC(MID$(ln$(c),a,1))-32
+FOR d=7 TO 0 STEP -1
+IF LAND(ASC(font$(5+lt*8+d)),2^b)>0 THEN 
+FOR var=1 TO height(c)
+PRINT #dv,CHR$(ch); 
+NEXT var
+ELSE 
+FOR var=1 TO height(c)
+PRINT #dv," "; 
+NEXT var
+ENDIF 
+NEXT d
+IF ln>0 AND c>0 THEN 
+FOR var=1 TO sp
+PRINT #dv," "; 
+NEXT var
+ENDIF 
+NEXT c
+PRINT #dv
+NEXT w
+NEXT b
+NEXT a
+CLOSE #dv
+GOTO 55
+
+200 REM * Select Font
+205 RUN gfx2("clear")
+REM RUN gfx2("palette",0,0)
+RUN gfx2("palette",8,0)
+RUN gfx2("curxy",tb+12,0)
+PRINT "/) Select Font (\"
+RUN gfx2("revon")
+PRINT TAB(sw+1)
+RUN gfx2("revoff")
+RUN gfx2("curxy",0,22)
+RUN gfx2("revon")
+PRINT TAB(sw+1); 
+RUN gfx2("revoff")
+210 ex$="fnt"
+GOSUB 930
+IF a$="" THEN 55
+GOSUB 840
+IF a=0 THEN 
+GOTO 210
+ELSE 
+ft$=a$
+ENDIF 
+GOTO 55
+
+300 REM * Configuration
+305 RUN gfx2("clear")
+REM RUN gfx2("palette",0,0)
+RUN gfx2("palette",8,0)
+RUN gfx2("curxy",tb+10,0)
+PRINT "/) Configuration (\"
+RUN gfx2("revon")
+PRINT TAB(sw+1)
+RUN gfx2("revoff")
+RUN gfx2("curxy",0,22)
+RUN gfx2("revon")
+PRINT TAB(sw+1); 
+RUN gfx2("revoff")
+RUN gfx2("curxy",tb+11,3)
+PRINT "Current Settings:"
+PRINT 
+PRINT TAB(tb+1); "Printer Width: "; pw
+PRINT 
+PRINT TAB(tb+1); "Printer Baud : N/A"
+PRINT 
+PRINT TAB(tb+1); "Font Width   : "; wd
+PRINT 
+PRINT TAB(tb+1); "Line Spacing : "; sp
+PRINT 
+PRINT TAB(tb+1); "Banner Char. : "; ch
+PRINT 
+PRINT TAB(tb+1); "Default Font : "; df$
+315 RUN gfx2("curxy",tb+2,23)
+PRINT "[E]dit [L]oad [S]ave or [X]it Config"; 
+RUN mbinput(a$,1,1)
+a=SUBSTR(a$,"ELSX")
+IF a$="" OR a=0 THEN 315
+IF a=4 THEN 55
+IF a=2 THEN 
+GOSUB 755
+GOTO 305
+ENDIF 
+IF a=3 THEN 
+GOSUB 780
+GOTO 305
+ENDIF 
+325 RUN gfx2("curxy",tb+2,20)
+PRINT "Enter your printer's carraige width."
+RUN gfx2("curxy",tb+15,5)
+RUN mbinput(a$,3,2)
+a=VAL(a$)
+IF a>32 AND a<132 THEN 
+pw=a
+ENDIF 
+330 REM *** Should be place to print/input baud rate...not needed.
+RUN gfx2("curxy",tb+15,5)
+RUN gfx2("ereoline")
+PRINT pw
+335 RUN gfx2("curxy",tb+15,7)
+PRINT "N/A"
+RUN gfx2("curxy",tb+2,20)
+PRINT "Enter default font width for banners."
+RUN gfx2("curxy",tb+15,9)
+RUN mbinput(a$,2,2)
+a=VAL(a$)
+IF a>0 AND a<10 THEN 
+wd=a
+ENDIF 
+340 RUN gfx2("curxy",tb+15,9)
+RUN gfx2("ereoline")
+PRINT wd
+RUN gfx2("curxy",tb+2,20)
+PRINT " Enter spacing between banner lines. "
+RUN gfx2("curxy",tb+15,11)
+RUN mbinput(a$,2,2)
+a=VAL(a$)
+IF a$="" THEN 345
+IF a>=0 AND a<20 THEN 
+sp=a
+ENDIF 
+345 RUN gfx2("curxy",tb+15,11)
+RUN gfx2("ereoline")
+PRINT sp
+RUN gfx2("curxy",tb+2,20)
+PRINT "Enter ASCII value of char. to print. "
+RUN gfx2("curxy",tb+15,13)
+RUN mbinput(a$,3,2)
+a=VAL(a$)
+IF a>32 AND a<256 THEN 
+ch=a
+ENDIF 
+350 RUN gfx2("curxy",tb+15,13)
+RUN gfx2("ereoline")
+PRINT ch
+RUN gfx2("curxy",tb+2,20)
+PRINT " Enter font name to load on startup. "
+RUN gfx2("curxy",tb+15,15)
+RUN mbinput(a$,8,1)
+IF a$<>"" THEN 
+df$=a$
+ENDIF 
+395 GOTO 305
+
+700 REM * Break Detected
+705 REM --- This is no longer in use...but the next line is!
+710 RUN gfx2("curxy",tb+4,13)
+PRINT "[ENTER] to Restart, [X] to Exit:"; 
+RUN mbinput(a$,1,1)
+IF a$="X" THEN 95
+GOTO 5
+725 REM * Error Detected :(
+730 RUN gfx2("clear")
+REM RUN gfx2("palette",0,0)
+RUN gfx2("palette",8,0)
+RUN gfx2("curxy",tb+10,0)
+PRINT "/) Error Detected (\"
+RUN gfx2("revon")
+PRINT TAB(sw+1)
+RUN gfx2("revoff")
+RUN gfx2("curxy",tb+9,4)
+PRINT "[ Error "; ERR; " reported! ]"
+PRINT 
+PRINT TAB(tb+1); " Honestly, I thought I had it bug-free!"
+PRINT 
+PRINT TAB(tb+1); "   If this was something other than a"
+PRINT TAB(tb+1); "   Disk Full or I/O Error, please let"
+PRINT TAB(tb+1); "   us know so we may exterminate it."
+GOTO 710
+END 
+
+750 REM * Load Configuration
+755 ON ERROR GOTO 770
+OPEN #dv,path$+"/miniban.cfg":READ
+INPUT #dv,ch
+INPUT #dv,pw
+INPUT #dv,sp
+INPUT #dv,wd
+INPUT #dv,df$
+INPUT #dv,sw
+CLOSE #dv
+a$=ft$ \ex$="fnt"
+GOSUB 840
+IF a=1 THEN 
+ft$=df$
+ENDIF 
+ON ERROR GOTO 730
+tb=(sw/40-1)*20
+REM - BRUTE FORCE way to set screen to whatever config says...
+IF sw=40 THEN 
+sw=80
+ELSE 
+sw=40
+ENDIF 
+GOTO 90
+RETURN 
+770 REM - Error loading config
+ON ERROR GOTO 730
+RUN gfx2("curxy",tb+2,23)
+RUN gfx2("bell")
+PRINT "Error Loading Config - Press [Enter]"; 
+RUN mbinput(a$,1,1)
+RUN gfx2("erline")
+RETURN 
+
+775 REM * Save Configuration
+780 a$="miniban" \ex$="cfg"
+GOSUB 840
+IF a=1 THEN 
+SHELL "del miniban.cfg"
+ENDIF 
+ON ERROR GOTO 785
+CREATE #dv,"miniban.cfg":WRITE
+PRINT #dv,ch
+PRINT #dv,pw
+PRINT #dv,sp
+PRINT #dv,wd
+PRINT #dv,df$
+PRINT #dv,sw
+CLOSE #dv
+ON ERROR GOTO 730
+RETURN 
+785 REM - Error saving config
+ON ERROR GOTO 730
+RUN gfx2("curxy",tb+2,23)
+PRINT " Error Saving Config - Press [ENTER]"; 
+RUN mbinput(a$,1,1)
+RUN gfx2("erline")
+RETURN 
+
+800 REM * Directory Subroutine
+805 GOSUB 855
+c=0
+ON ERROR GOTO 830
+OPEN #dv,path$:READ+DIR
+WHILE EOF(#dv)=FALSE DO 
+GET #dv,line$
+b=SUBSTR(".fn"+CHR$($F4),line$)
+IF b>0 AND LEFT$(line$,1)<>CHR$(0) THEN 
+PRINT "   "; LEFT$(line$,b-1); LEFT$("            ",11-b); 
+c=c+1
+IF POS>sw-2 THEN 
+PRINT 
+ENDIF 
+IF c=48*(sw/40) THEN 
+RUN gfx2("curxy",tb+2,23)
+PRINT "Press [ENTER] for More, [X] to Stop:"; 
+RUN mbinput(a$,1,1)
+RUN gfx2("curxy",0,23)
+RUN gfx2("erline")
+IF a$="X" THEN 
+RETURN 
+ENDIF 
+GOSUB 855
+c=0
+ENDIF 
+ENDIF 
+ENDWHILE 
+CLOSE #dv
+RETURN 
+830 REM - Error reading directory
+ON ERROR GOTO 730
+RUN gfx2("curxy",tb+3,23)
+RUN gfx2("bell")
+PRINT "Error Reading DIR - Press [ENTER]"; 
+RUN mbinput(a$,1,1)
+RUN gfx2("erline")
+RETURN 
+
+835 REM * Verify File Name
+840 ON ERROR GOTO 845
+a=1
+OPEN #dv,path$+"/"+a$+"."+ex$:READ
+CLOSE #dv
+ON ERROR GOTO 730
+RETURN 
+845 a=0
+RUN gfx2("bell")
+ON ERROR GOTO 730
+RETURN 
+
+850 REM * Clear Screen Sub
+855 FOR c=0 TO 15
+RUN gfx2("curxy",0,6+c)
+RUN gfx2("erline")
+NEXT c
+PRINT 
+RUN gfx2("curxy",0,6)
+RETURN 
+
+875 REM * Baud Rate Routine
+880 RETURN 
+
+925 REM * Load from Disk...
+930 RUN gfx2("curxy",tb+5,3)
+PRINT "Enter Font Name, [D]irectory,"
+PRINT TAB(tb+6); "or [P]review: ........"
+RUN gfx2("curxy",tb+19,4)
+RUN mbinput(a$,8,1)
+IF a$="" THEN 
+RETURN 
+ELSE 
+IF LEN(a$)>8 THEN 930
+ENDIF 
+935 IF a$="D" THEN 
+GOSUB 805
+GOTO 930
+ELSE 
+IF a$="P" THEN 
+GOSUB 950
+GOTO 930
+ENDIF 
+ENDIF 
+RETURN 
+945 REM * Font Preview
+950 RUN gfx2("curxy",tb+2,23)
+RUN gfx2("bell")
+PRINT " Font Preview not supported in V"; vr$; 
+RETURN 
+
+5000 REM 
+5001 REM V0.1 - Program Began 6/2/91
+5002 REM V0.2 - Program "done" 6/6/91 - bugs fixed
+5003 REM V1.0 - Creates own screens, toggles width, palette trick 9/16/91
+5004 REM V1.01 - Enhanced version number 10/10/91
+PROCEDURE MBinput
+REM *
+REM * MiniBanners Input Routine
+REM *
+REM * 0=Normal as typed, 1=Force Uppercase, 2=Accept Numbers Only
+REM *
+
+PARAM line$:STRING[80]; length,kind:INTEGER
+DIM char$:STRING[1]
+ON ERROR GOTO 100
+SHELL "Tmode -Echo"
+RUN gfx2("palette",8,63)
+IF length>1 THEN 
+RUN gfx2("curon")
+ENDIF 
+line$=""
+LOOP 
+GET #1,char$
+EXITIF char$=CHR$(13) THEN 
+IF length<>1 THEN 
+RUN gfx2("curoff")
+ENDIF 
+ENDEXIT 
+IF char$=CHR$(8) THEN 
+IF line$<>"" THEN 
+line$=LEFT$(line$,LEN(line$)-1)
+PRINT CHR$(8); " "; CHR$(8); 
+ENDIF 
+ELSE 
+IF LEN(line$)<length AND ASC(char$)>31 AND ASC(char$)<128 THEN 
+IF kind=1 AND (ASC(char$)>96 AND ASC(char$)<123) THEN 
+char$=CHR$(ASC(char$)-32)
+ELSE 
+IF kind=2 AND (ASC(char$)<48 OR ASC(char$)>57) THEN 
+char$=""
+ENDIF 
+ENDIF 
+line$=line$+char$
+IF length<>1 THEN 
+PRINT char$; 
+ENDIF 
+ENDIF 
+ENDIF 
+EXITIF LEN(line$)=1 AND length=1 THEN 
+ENDEXIT 
+ENDLOOP 
+IF kind=2 AND line$="" THEN 
+line$="0"
+ENDIF 
+100 SHELL "Tmode Echo"
+END 

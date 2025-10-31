@@ -1,0 +1,14 @@
+
+    MiniBanners09 - DEMO Version 1.01
+
+ Copyright (C) 1991 by Allen C. Huffman
+
+                  and
+
+           Sub-Etha Software
+            P.O. Box 152442
+          Lufkin, Texas 75915
+
+    This DEMO VERSION may be freely
+   distributed - NOT FULLY FUNCTIONAL
+

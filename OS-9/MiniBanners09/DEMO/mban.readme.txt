@@ -1,0 +1,62 @@
+10/11/91, Revised 9/15/94
+
+This archive contains a DEMONSTRATION VERSION of MiniBanners09 from
+Sub-Etha Software.  This demo will allow you to get the "feel" of how
+the program operates and will even print sample banners using the
+parameters you specify.  However, no actual banner text is accepted.
+ 
+Copy MBanDemo to your CMDS directory.  You must have RUNB merged with
+GFX2 in your CMDS directory also.  Place the font files (.fnt) in a
+sub-directory or in the current working directory then, from a non-VDG
+screen, type MBANDEMO to execute the demo.  (You may also type
+"MBANDEMO <>>>/w&" and the program will create it's own screen to run
+in.)
+ 
+The program should be fairly self-explanatory.  Complete demo instructions
+will be written shortly.  I wanted to get this demo out as soon as possible
+for those who have been wanting to see just how MiniBanners works.  While
+not complete, this demo should get you started.
+ 
+Quick Notes:
+ 
+On startup you are asked if you want to load in a saved configuration.
+Config contains information on default banner parameters and screen width.
+ 
+1) Print a Banner - Asks you to enter your printer width (32-132 columns),
+   font width (thickness of banner letters), line spacing (lines to skip
+   between lines on multiple line banners), and printer character (the
+   ASCII value of the character to make banners with - 219 on IBM printer
+   is a block, 239 on Tandy printer is a similar block).
+ 
+   You are then prompted to the first line of text, followed by the max
+   heigth for the line.  If you choose a smaller height you can continue
+   to enter lines until no more space is available.  The banner may be
+   centered on the page or printed resting on the bottom of the page.
+ 
+   NOTE:  Your actual text will not be printed.  A demo message will be.
+ 
+2) Select a Font - You can see a [D]irectory of FONT files or type in
+   the name of the font you want to load.
+ 
+3) Configuration - Select defaults (to be loaded on startup).  You must
+   [S]ave the config file to create it.
+ 
+W) Toggle 40/80 - Creates either 40 or 80 column screen.
+ 
+X) Exit to OS9 - Quit and gives ordering instructions!
+ 
+Okay, that's it for a quick description.  Watch for a more up-to-date
+archive coming soon.  I may be reached on GEnie as "COCO-SYSOP" or on the
+internet as "coco-sysop@genie.geis.com".  Have fun and get back to me with
+any comments!
+
+            Allen Huffman, Co-Owner
+            Sub-Etha Software
+
+To order MiniBanners09, send $19.95 + $2.50 shipping & handling to:
+
+            Sub-Etha Software
+            P.O. Box 152442
+            Lufkin, Texas 75915
+
+Please specify OS-9 or RS-DOS version.
