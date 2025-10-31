@@ -1,0 +1,7 @@
+*
+* Shell+ script to link EthaWin program and menu data with the libaray...
+*
+prompt 'Root' files to link with EthaWin :
+var.0
+echo Attempting to link '%0.r' and '%0vars.r' with EthaWin.l ...
+c.link -o=%0 /dd/lib/cstart.r %0.r %0vars.r -l=/dd/lib/ethawin.l -l=/dd/lib/cgfx.l -l=/dd/lib/clib.l

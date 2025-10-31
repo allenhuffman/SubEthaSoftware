@@ -1,0 +1,127 @@
+The EthaWin library is composed of many routines used to simulate a "graphical
+user interface"...without the graphics.  Of course, if you are compiling this
+on an MM/1 this statement is false, since it will be on a graphics screen...
+
+No docs are ready yet, but some sample sources are included and here is a list
+of the main functions you will use:
+
+
+int Startup(makewin) /* setup screen, init vars, turn on mouse, etc... */
+char makewin;
+
+Reads in the ethawin config file, creates a screen, switches to it, and all
+that stuff.  It returns the path number of the window created.  "makewin" is a
+TRUE/FALSE thing.  If "TRUE", make a new window to run off.  If FALSE, use the
+existing window.
+
+
+TopText(wpath,left,title,right) /* display text on top line */
+int wpath;
+char *left,*title,*right;
+
+Puts text on the top line of the screen.
+
+
+LineInput(wpath,x,y,prompt,line,length)
+int wpath,x,y;
+char *prompt,*line;
+int length;
+
+Puts cursor at x/y location, displays prompt (if any), gets up to "length"
+characters in variable "line".
+
+
+int OpenFile(filename,mode)
+char filename[];
+int mode;
+
+Opens file/device "filename" with "mode" access.  Returns path to file.  (Uses
+OS9 system call open, and not fopen stuff.)
+
+
+PopUp(wpath,title,x,y,w,h) /* pop-up shaded dialog box... */
+int wpath;
+char *title;
+int x,y,w,h;
+
+Pop up window with border.  "title" is the title text, x/y is start position
+and w/h is the width and height of the window.
+
+
+PrintAt(wpath,x,y,text)
+int wpath,x,y;
+char *text;
+
+Print "text" at x/y position.
+
+
+Snooze(wpath)
+int wpath;
+
+Put this in to make program "sleep" if user isn't in current window.  The
+EthaWin library does this within it's own routines when waiting for menu
+input, etc, but it might be useful elsewhere.
+
+
+Wait(wpath)
+int wpath;
+
+Get a key or mouse click then return.
+
+
+int YesNo(wpath,title) /* are you sure box */
+int wpath;
+char *title;
+
+Displays a YES/NO box with "title" at the top (like "Quit?").  Returns TRUE if
+yes, FALSE if no.
+
+
+EndWin(wpath) /* kill overlay window */
+int wpath;
+
+Kills a double  overlay window, such as the one created by PopUp().  (This
+does two OWEnd calls.)
+
+
+char CheckMenu(wpath,menu,option,ch,click)
+int wpath,*menu,*option;
+char *ch; /* pointer to character read, if any... */
+char *click; /* returned status of mouse click */
+
+Ah, the guts of the program!  Call this routine in your main program loop.  If
+during the loop the user pulls down a menu and makes a choice by using hot
+keys or mouse, this routine returns the "menu" number selected and "option"
+selected from that.  Else, it returns a "ch" character (if they selected one
+that wasn't valid) and the TRUE/FALSE status of the mouse click.  (ie, if this
+routine is called and click is TRUE you might then check the mouse status to
+see if they clicked on a hot spot on the screen.
+
+
+I think that is most of it right now...  Check the sample code for more info. 
+The only other crucial thing is knowing how to structure the menu text (see
+ethademovars.c code) and link/compile them together.
+
+More documentation will be made available (if needed) in the future.
+
+DIFFERENCES in the CoCo 3 and MM/1 versions:
+
+Most functions work as promised on either version but there are some minor
+differences in the MM/1 CGFX library and the one used by the CoCo 3.  First,
+MM/1 does not support blinking text.  For compatibility, BlnkOn() and
+BlnkOff() are provided but they don't do anything.  Also, the MM/1 does not
+support the "click counter" (ms.pt_cca) so programs that use this will NOT
+compile on an MM/1 (a workaround is being looked into).  Some other CoCo 3
+CGFX calls are not in the MM/1 version (such as cwrite and cwriteln) so
+don't be suprised if something doesn't work.  (For the record, the file
+"misc.c" contains BlnkOn, BlnkOff, cwrite and cwriteln...  Any others you
+find can easily be added there...then let me know about them so I can make
+them part of the official distribution.)
+
+Other differences will be cosmetic.  The MM/1 operates on a graphic screen
+so the real mouse is always visible and can move outside of pulldown menus.
+Also, the screen is two lines longer.  Anyone writing software for the MM/1
+with the intension of porting it to the CoCo should take this into account.
+
+<eof>
+

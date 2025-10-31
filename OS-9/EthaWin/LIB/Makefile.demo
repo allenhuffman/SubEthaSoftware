@@ -1,0 +1,23 @@
+#
+# This is a Makefile which will create the Ethawin demo. Note that it does
+# use the replacement CC front end and does require cgfx.l and ethawin.l.
+#
+
+CFLAGS = -r
+
+# the .r files that make up the library
+
+RFILES = ethademo.r ethademovars.r
+
+# to make the library, just merge the .r files together...
+
+ethademo: $(RFILES)
+     cc -f=ethademo $(RFILES) -l=/dd/lib/ethawin.l -l=/dd/lib/cgfx.l
+
+# these files are made in the following manner:
+
+ethademo.r: ethademo.c
+     cc $(CFLAGS) ethademo.c
+
+ethademovars.r: ethademovars.r
+     cc $(CFLAGS) ethademovars.c

@@ -1,0 +1,146 @@
+    File:  ETHADEMO.DOC - Revision 1.1 (10/9/93) - By Allen C.  Huffman
+
+                                   Announcing...
+
+                 EEEEE  TTTTT  H   H   AAA      W W W  III  N   N
+                 E        T    H   H  A   A     W W W   I   NN  N
+                 EEE      T    HHHHH  AAAAA === W W W   I   N N N
+                 E        T    H   H  A   A     W W W   I   N  NN
+                 EEEEE    T    H   H  A   A      W W   III  N   N
+                                                       
+                    A New Text-Based User Interface for OS-9...
+
+
+     Multi-Vue was a good attempt at bringing a standardized point and click
+  windowing interface to Color  Computer  OS-9.   Unfortunately,  the  stock
+  Multi-Vue  was  less than perfect, being slow and containing various bugs.
+  GShell+ (a series of shareware patches for Multi-Vue) along  with  various
+  contributions  by  the  legendary Kevin Darling "beefed up" Multi-Vue into
+  something much more useable.
+     Unfortunately,  even  with  these  enhancements  Multi-Vue  never quite
+  became a commonly used interface.  First, not  everyone  owned  it  (after
+  all,  you  had to have the package and WindInt in your bootfile before you
+  could run a Multi-Vue program) and of those that did, many still  did  not
+  use it.  So...the proposed standard never fully evolved.
+     Multi-Vue is still our only source for a graphical standard among Color
+  Computer   OS-9   users.    Sadly,   due   to  difficulty  in  programming
+  applications, the lack of full  standards,  and  the  overall  lack  of  a
+  userbase,  it was felt that another "standard" was needed.  Welcome to the
+  new world of EthaWin, a point-and-click menu interface for OS-9.
+
+
+  THE BEGINNING
+
+     To understand WHY another "standard" is being proposed, some background
+  should  be  know.  Back in 1990, Joel Mathew Hegberg created a CoCo RS-DOS
+  program (CheckBook+) that worked on a graphical screen using mouse control
+  and  pull  down  menus.   The next year, the decision was made to port the
+  program to OS-9, yet without requiring Multi-Vue  it  was  impractical  to
+  write a full graphical interface for the program.
+     Joel decided to create a similar interface  based  on  a  TEXT  screen.
+  Using  a  text-cursor,  he was able to have pop-up dialog boxes, pull down
+  menus, and all those things normally associated with graphical interfaces.
+  Best  of  all,  it worked quite nicely.  Sadly, due to the effort it takes
+  to create an interface like this from the ground  up  it  never  became  a
+  "normal" thing for OS-9 programs.
+     Also around this time, a utility called CCTOOLS (from a  Canadian  CoCo
+  Club I believe) was circulating using a text-based interface complete with
+  "hot-key" support.  At least someone else out  there  was  thinking  about
+  this.   But, other than these two programs, it seems like the thought of a
+  text-based interface was not going to become commonplace...
+
+  WHAT IS ETHAWIN?
+
+     EthaWin  is  an  attempt  to  create  an  easy-to-use,  easy-to-program
+  windowing  interface  for  OS-9.   With  enough  routines  in place, all a
+  programmer would have to do is define the menus and then make a few  calls
+  to  the  routines to see what the use selected.  No linked lists, no fancy
+  setup, just easy "run and go"  operating.   From  the  user's  standpoint,
+  EthaWin offers FULL mouse support as well as COMPLETE keyboard support via
+  "hot-keys" to access menus.
+     For instance, you might click on the "FILE" menu with a mouse, or press
+  ALT-F to pull down  the  menu.   Each  menu  item  also  has  a  "hot-key"
+  (underlined)  which  can  be  pressed  to  instantly  select that command.
+  Basically, EthaWin is modeled after the look and feel  of  Tandy  Deskmate
+  (tm) on the PCs and Microsoft Windows (tm).
+
+  WHAT IS ETHADEMO?
+
+     EthaDemo  is  a  simple demonstration of EthaWin.  It doesn't really do
+  anything, BUT you can see (for the most part) how the menus operate.  Here
+  are some things to observe:
+
+     o Mouse Support
+        Move  the  text-cursor  over  the  menu name to pull down and click.
+  Once the menu is displayed move up or down to choose the option you desire
+  then  click to select it.  If an option is currently unselectable, it will
+  appear in a different color and will not be choosable.  Some  options  may
+  be  "tagged"  and  have a small symbol to the left of the name.  Selecting
+  these options will toggle them on or off.  (Select options under the  TEXT
+  menu  to  see  how  this works.)  To abort a menu, move all the way to the
+  bottom of the menu (below the last item) and click.
+     o Keyboard Support
+        The underlined letter of the menus is what you would select to  pull
+  it  down.   For  instance, to pull down the FILE menu press "ALT-F".  Once
+  the menu is displayed, use the up/down arrow keys to choose a  menu  item.
+  Pressing  ENTER  will select it, or you can press BREAK to abort the menu.
+  You may also use the left/right arrows to move from one menu to the  next.
+     
+     To exit the demo, select QUIT from  the  FILE  menu.   Selecting  ABOUT
+  (Alt-A) or HELP (Alt-F) bring up simple dialog boxes.
+
+  CONFIGURING ETHAWIN PROGRAMS
+
+     Located  in  a  /DD/SYS/ETHAWIN  directory  should reside a file called
+  "ethawin.cfg".  This file has  simple  text  lines  that  control  various
+  aspects  of the EthaWin interface including colors, mouse support, and how
+  the menus operate.  More options  will  be  added  to  this  file  as  the
+  interface  evolves,  but for now the basic features are in place.  Most of
+  the entries should be fairly easy to understand.
+
+  SOFTWARE BASE
+
+     An EthaWin for the MM/1 will also be created (and possibly one to  work
+  with TermCap on any OSK machine).  The MM/1 version will look MUCH fancier
+  and work using the MM/1 mouse control (with nifty  3-D  metallic  windows,
+  etc.).   What  is  good  about  this  is that if someone writes an EthaWin
+  program for the CoCo, it can easily (?) be ported to run on the MM/1.
+     EthaWin  is  written  in  'C',  though  it might be possible to make it
+  callable from BASIC09 or assembly language.  This has yet to be discussed.
+
+  WILL IT BECOME A 'STANDARD'?
+
+     We think it could, and here is why.  Developers will be able to get the
+  full  EthaWin  development  system  *FREE*.  (We might charge for disk and
+  manual expenses if necessary.)  They will be free to write programs  under
+  the  interface for shareware release.  The only "catch" is as follows:  If
+  a program is written for commercial release, Sub-Etha  would  like  to  be
+  able to distribute it as well.
+     That's it!  No royalties, startup costs, or anything.  Just  write  and
+  get  some good software out there.  Sub-Etha will end up with a library of
+  EthaWin products to market (hopefully) which, of course, we pay the author
+  royalties on...and we don't even ask "exclusive" rights to these programs!
+  There really is no "gotcha" to this proposal!
+
+  WHAT'S NEXT?
+
+     The interface works now, but there are many more things to add  to  the
+  library.   We  are looking for qualified 'C' programmers who might want to
+  work on this project.  It's a non-paying job (unless, of course, you write
+  something that uses the interface and sell it).  Any takers?
+
+  SO...
+
+     Get in touch with us!
+     
+     Sub-Etha Software
+     P.O.  Box 152442
+     Lufkin, TX  75915
+     
+     COCO-SYSOP@genie.geis.com (on the Internet)
+     
+     or contact JOELHEGBERG on GEnie.
+     
+     Let's  get this rolling and see what happens.  Please get in touch with
+  us (electronic responses preferred) with any suggestions  or  comments  to
+  this demo and let's see where it goes.

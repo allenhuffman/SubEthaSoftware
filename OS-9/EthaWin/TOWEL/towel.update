@@ -1,0 +1,30 @@
+Changes to the EthaWin Interface:
+---------------------------------
+
+Config file now read properly:
+   correctly ignores spaces at the start of config entries
+   correctly finds '*' at start of remarks and ignores those lines
+
+Changes to startup/config routine:
+   doesn't select new window until all config read and palettes set
+
+Changes to mouse control in pull-down menus:
+   scaling reflects actual mouse position rather than scaling to window
+
+Yes/No dialog boxes now support 'Y' and 'N' hot-keys.
+
+V1.01 - Changes to Towel! from V1.00:
+-------------------------------------
+
+"-s" options makes program use same screen (and not make a new one)
+Reads up to 500 filenames in a directory (was 300)
+Shift-UP/DOWN changed to work more like text editors do
+Ctrl-UP/DOWN to move to top or bottom of directory
+LIST command added to FILE menu
+MOVE command added to FILE menu
+Double-clicking on UP/DOWN buttons now supported (same as Shift-UP/DOWN)
+"Shell Monitor" now BREAK abortable (more or less)
+Displays number of files in directory
+Give Error # when aborting (in Yes/No box)
+USER menu:  Add $ to start of config file entry and it will run the specified
+   command using the tagged files as parameters (like DELETE does)

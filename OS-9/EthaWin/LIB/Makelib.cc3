@@ -1,0 +1,14 @@
+*
+* CoCo 3 OS-9 Level 2 version
+*
+* Script to merge ethawin .r files into the EthaWin.l file.
+*
+* 1.00 03/17/95 - new version
+*
+echo Deleting old /DD/LIB/EthaWin.l file . . .
+-x
+del /dd/lib/ethawin.l
+x
+echo Merging EthaWin.r files into EthaWin.l file . . . hang on . . .
+merge startup.r config.r mouse.r menu.r yesno.r popup.r pulldown.r endwin.r toptext.r printat.r snooze.r wait.r lineinput.r >/dd/lib/ethawin.l
+

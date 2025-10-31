@@ -1,0 +1,51 @@
+
+     ---------------------------------------------------------------------
+     EthaWin Text-Based Interface by Allen C. Huffman of Sub-Etha Software
+     ---------------------------------------------------------------------
+
+
+Contents of Directory:
+----------------------
+ 
+    Directory of  /dd/sources/c/ethawin/lib  20:07:12 
+DoELink         EthaExt.h       EthaGlobals.h   EthaWin.doc     EthaWin.h
+EthaWin.readme  MakeLib         README.1ST      config.c        config.r
+endwin.c        endwin.r        ethalib.doc     ethawin.cfg     ethawin.l
+lineinput.c     lineinput.r     menu.c          menu.r          mouse.c
+mouse.r         openfile.c      openfile.r      popup.c         popup.r
+printat.c       printat.r       pulldown.c      pulldown.r      snooze.c
+snooze.r        startup.c       startup.r       toptext.c       toptext.r
+wait.c          wait.r          yesno.c         yesno.r         ethademo.c
+ethademovars.c  
+ 
+The ".c" files are all necessary modules for the EthaWin library.  The ".r"
+files are compiled versions of the sources and they must be merged together
+to form the "EthaWin.l" library, as described below.
+ 
+"ethademo.c" is a demo program using the library, and "ethademovars.c"
+contains the global variables for the pull down menus.
+ 
+ 
+EthaWin Library Information (5/31/94):
+--------------------------------------
+ 
+First you must compile all the ".c" files into ".r" modules.  Using Shell+,
+you would type:
+ 
+   ":cc -r *.c"
+ 
+Then you would use the "makelib" script file which will merge all the ".r"
+modules together and place them in your /DD/LIB directory under the name
+of "ethawin.l".
+ 
+The Shell+ script file "doelink" will create an ethawin program you specify.
+It expects to find the ethawin variable file "namevars.r" along with the
+program file "name.r".
+ 
+ 
+Special Files:
+--------------
+ 
+doelink - links your .r file with the ethawin.l library and cgfx, etc...
+ 
+makelib - merges all the .r library files together into the ethawin.l file

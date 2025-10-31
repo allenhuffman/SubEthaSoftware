@@ -1,0 +1,55 @@
+
+     ---------------------------------------------------------------------
+     EthaWin Text-Based Interface by Allen C. Huffman of Sub-Etha Software
+     ---------------------------------------------------------------------
+
+
+Contents of Directory:
+----------------------
+ 
+    Directory of  /dd/sources/c/ethawin/lib  20:07:12 
+
+                         [insert dir contents here]
+ 
+The ".c" files are all necessary modules for the EthaWin library.  The ".r"
+files are compiled versions of the sources and they must be merged together
+to form the "EthaWin.l" library, as described below.
+ 
+"ethademo.c" is a demo program using the library, and "ethademovars.c"
+contains the global variables for the pull down menus.
+ 
+ 
+EthaWin Library Information (4/2/95):
+-------------------------------------
+ 
+First you must compile all the ".c" files into ".r" modules.  Using Shell+,
+you would type:
+ 
+   ":cc -r *.c"
+
+MM/1 users can just do "cc -r *.c" or add the "-t=/r0" option to compile to a
+ramdisk (faster).
+ 
+Then you would use the "makelib.mm1" or "makelib.cc3" script file which will
+merge all the ".r" modules together and place them in your /DD/LIB directory
+under the name of "ethawin.l".
+ 
+The Shell+ script file "doelink" will create an ethawin program you specify.
+It expects to find the ethawin variable file "namevars.r" along with the
+program file "name.r".  MM/1 users can look at the script file "makedemo" for
+examples of linking code to the library.
+ 
+ 
+Special Files:
+--------------
+ 
+doelink - (CoCo) links your .r file with the ethawin.l library and cgfx, etc...
+ 
+makelib.mm1 - (MM/1) merges library .r files together into the ethawin.l file
+
+makelib.cc3 - (CoCo) ditto, but for CoCo
+
+makedemo - links "ethademo.r" and "ethademovars.r" with the library
+
+*.h - these header files should go in /DD/DEFS/ETHAWIN/...
+

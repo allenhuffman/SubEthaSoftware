@@ -1,0 +1,2 @@
+echo Linking Labor with EthaWin library . . .
+cc -f=labor labor.r laborvars.r -l=/dd/lib/ethawin.l -l=/dd/lib/cgfx.l

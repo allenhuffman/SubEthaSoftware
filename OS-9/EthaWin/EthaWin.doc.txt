@@ -1,0 +1,195 @@
+
+     ---------------------------------------------------------------------
+     EthaWin Text-Based Interface by Allen C. Huffman of Sub-Etha Software
+     ---------------------------------------------------------------------
+ 
+ 
+Library Functions
+-----------------
+ 
+   Most functions of the EthaWin library are for internal system use.  The
+core of the library is made up of a Startup() function which initializes the
+interface, and a CheckMenu() routine which handles all the necessary menu
+processing and returns appropriate option, menu, mouse or keyboard information
+to the user's program.  A few other various functions, such as PrintAt() and
+LineInput() are also provided.
+   Here is a list of "user" functions:
+ 
+ 
+   int Startup(makewin)
+   char makewin;
+ 
+   If "makewin=TRUE", Startup() will open a new window and select it for the
+application to operate from.  If "makewin=FALSE", the existing screen is used
+and *MUST* be an 80 column window (no checking is done).  This was provided to
+allow EthaWin applications to run over terminals supporting OS9 screen codes. 
+In either case, the path to the new window is returned.
+   The Startup() routine sets up an Intercept trap for keyboard and mouse
+signals, modifies tmode settings appropriately (no echo), and attempts to read
+user settings (ReadCfg) from the file "/DD/SYS/ETHAWIN/ethawin.cfg".  Defaults
+will be used if this file does not exist.  Screen colors and initial menu and
+title bar is created (title text can be added using the TopText function).
+ 
+ 
+   int ShutDown(wpath)
+   int wpath;
+ 
+   "wpath" is the path to the window (all screen i/o MUST be done to this
+path).  This function is the opposite of StartUp and will restore terminal
+settings and kill the created window (if any).
+ 
+ 
+   TopText(wpath,left,title,right)
+   int wpath;
+   char *left,*title,*right;
+ 
+   This function allows you to display text on the title bar.  The EthaWin
+standard is for the application name, version number, and author to appear as
+the "title".  The "left" and "right" text have not been defined.
+ 
+   Example:    TopText(wpath,"","Towel V1.01 - By Allen Huffman","");
+ 
+ 
+   LineInput(wpath,x,y,prompt,line,length)
+   int wpath,x,y;
+   char *prompt,*line;
+   int length;
+ 
+   This is a general purpose input routine.  Pass it the window path and the X
+and Y coordinates (0-79, 0-23) for the "prompt" (if any) to appear, and it
+will accept a string in "line" of "length" characters from the user.  If ENTER
+is chosen by the user, "line" will be a NULL character.  If "length==1", it
+works like Inkey$.  One character will be chosen without ENTER needing to be
+pressed and it will be made uppercase.
+ 
+   Example:    LineInput(wpath,10,10,"Name:",line,25);
+ 
+ 
+   PrintAt(wpath,x,y,text)
+   int wpath,x,y;
+   char *text;
+ 
+   A general purpose print routine that displays "text" at the X and Y
+position on the screen.
+ 
+ 
+   int YesNo(wpath,title) /* are you sure box */
+   int wpath;
+   char *title;
+ 
+   A nifty dialog box that accepts either YES or NO from the user.  "title"
+can be a short (26 characters or less) box title.  The routine will return
+TRUE if YES was selected or FALSE if no selected.
+ 
+   Example:    if ( YesNo(wpath,"QUIT?") == TRUE ) ShutDown();
+ 
+ 
+   PopUp(wpath,title,x,y,w,h) /* pop-up shaded dialog box... */
+   int wpath;
+   char *title;
+   int x,y,w,h;
+ 
+   This one is tricky.  It creates a pop-up window with "title" starting at X
+and Y, with the width of W and height of H.  Working area is changed into this
+window, and you can use PrintAt to put text there.  When done, you must use
+EndWin to close this double window.
+ 
+   Example:    PopUp(wpath,"NotePad",10,10,60,8);
+ 
+ 
+   EndWin(wpath) /* kill overlay window */
+   int wpath;
+ 
+   This kills windows created with PopUp by performing two overlay window end
+calls.  Simple.
+ 
+ 
+   Wait(wpath)
+   int wpath;
+ 
+   A multi-purpose pause routine.  It will wait for a keypress or mouse click,
+then return to the program.  Use this in conjunction with PopUp if you are
+just displaying a warning message, for instance.
+ 
+ 
+   Snooze(wpath)
+   int wpath;
+ 
+   This checks to see if the mouse pointer is valid (ie, is the program on an
+active window or in the background?) and puts the program to sleep if it's
+not.  This is actually called within the CheckMenu routine, but I include it
+here in case it may be of other use.
+ 
+ 
+   int OpenFile(filename,mode)
+   char filename[];
+   int mode;
+ 
+   This is the OS9 "open" call.  Pass it the "filename" string of a file or
+device and the access "mode" byte (S_IWRITE, etc.) and it will return the path
+to the file/device or ZERO is it was unable to open.  Be sure to
+"Close(fpath)" when done.
+ 
+ 
+* NOTE:  Complex Menu Handling Routines Follow...
+ 
+ 
+   char CheckMenu(wpath,menu,option,ch,click)
+   int wpath,*menu,*option;
+   char *ch; /* pointer to character read, if any... */
+   char *click; /* returned status of mouse click */
+ 
+   This is the core of EthaWin.  This routine needs to be the main loop of any
+EthaWin program.  Pass CheckMenu the POINTER to menu and option integers, and
+ch and click chars and it will return values in them, if available.  If
+nothing was received (no menu selected, no key pressed, no mouse status),
+CheckMenu returns FALSE.
+   if TRUE, "menu" will be the menu selected (0-XX) and "option" will be the
+option chosen within that menu (0-XX) as defined in the ...vars.c file for
+your program.
+ 
+   Long Example:
+ 
+   int menu,option;
+   char ch,click;
+ 
+   if CheckMenu(wpath,&menu,&option,&ch,&click) { /* if something there, */
+      if (menu==0) { /* if, say, FILE menu chosen: */
+         ...blah blah blah to check for what "option" was chosen
+            and run whatever routine it should run...
+      }
+   }
+ 
+   If nothing was chosen, you may still see if any keys were pressed by
+checking "ch" or see if the mouse was clicked by checking "click".  Thus, you
+could still have "hot-keys" of your own or check for screen hot spots.  Please
+see the sample source for for the "ethademo.c" for more information.
+   All global mouse information is available to your program after this call
+from the global variables "mouse_x" and "mouse_y".  Thus, after a CheckMenu
+you might say:
+ 
+   if (click==TRUE) { /* click detected */
+      if (mouse_y == 3) { /* mouse click on line 3, which has a button */
+         if (mouse_x>5 && mouse_y<10) {
+            ...activate that button...
+         }
+      }
+   }
+ 
+   ...or whatever.  I realize this isn't very clear, but perhaps it will make
+sense when you see the demo source.
+ 
+ 
+   That should cover the functions of the library.  Please see the
+"ethademovars.c" file for detailed information on setting up the menu text in
+the global variables.  Please note that your main program will also need a
+line to define the number of menus your program uses such as:
+ 
+   #define MAXMENUS 4
+ 
+   This line is used at compile time.  Messy, I know, but it works.
+ 
+ 
+   Good luck!  For questions, contact "coco-sysop@genie.geis.com".
+ 
+                                                -- Allen C. Huffman, 12/14/94
