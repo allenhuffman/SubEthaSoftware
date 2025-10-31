@@ -1,5 +1,5 @@
-/* MiniPub.c V0.02 by Allen C. Huffman
- * Copyright (C) 1993 by Sub-Etha Software
+/* MiniPub.c V0.03 by Allen C. Huffman
+ * Copyright (C) 1994 by Sub-Etha Software
  *
  * Processes ASCII text file into a two column 'newsletter'...
  *
