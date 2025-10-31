@@ -1,0 +1,1 @@
+0 REM *1 REM * MiniBanners 1.1 by Allen Huffman2 REM *        Copyright (C) 19903 REM *       by Sub-Etha Software4 REM *5000 '5001 'V0.0 - Program Began 9/20/905002 'V1.0 - CoCo Fest Release 10/905003 'V1.1 - 80 Col. & Updates 10/90
