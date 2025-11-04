@@ -1,0 +1,85 @@
+;Microware Hawk Project File (do not remove or modify this line)
+[ProjInit]
+ProjSetConfigFlags=0x04010940
+ProjCheckPath='C:\Hawk\TCWinLib\\'
+
+[State]
+SysSetCwd='C:\Hawk\TCWINLIB'
+SrchSetFlags=0x0410600a
+FileSortMode=0x0
+StateWindowFrame=0,0,600,411,0x63097fca
+
+[Editor]
+VCSProject=''
+VCSProjectPath=''
+VCSProjectLocalPath=''
+ScrapSetCount=1
+ClipboardEnableSepStr=1
+ClipboardSetSepStr='\r\n',0
+ClipboardEnableTermStr=1
+ClipboardSetTermStr='\r\n',0
+
+[Compiler]
+TagSetFile=''
+BrowseSetFile=''
+CompilerNewExt=.htm
+CompilerNewExt=.mak
+CompilerNewExt=.d
+CompilerNewExt=.a
+CompilerNewExt=.des
+CompilerNewExt=.cc
+CompilerNewExt=.html
+CompilerNewExt=.bat
+CompilerNewExt=.txt
+CompilerNewExt=.cmd
+TagSetCmd='${HOME}${WTAGS} -oc -d -t"${TAGFILE}.tag" -p"${TAGFILE}.ptg"',0x8000060
+
+[VersionControl:PVCS]
+VCSSetCmd=VCS_CHECKIN_ID,'put -n -T@%Q -M@%Q %b%e',0x8000040
+VCSSetCmd=VCS_CHECKINLOCK_ID,'put -n -T@%Q -M@%Q -l %b%e',0x8000040
+VCSSetCmd=VCS_CHECKOUT_ID,'get -y %b%e',0x8000040
+VCSSetCmd=VCS_CHECKOUTLOCK_ID,'get -y -l %b%e',0x8000040
+VCSSetCmd=VCS_CHECKLOCK_ID,'vcs -y -l %b%e',0x8000040
+VCSSetCmd=VCS_CHECKUNLOCK_ID,'vcs -y -u %b%e',0x8000040
+VCSSetCmd=VCS_CHECKLABEL_ID,'vcs -y -v"${VCSLABEL}" %b%e',0x8000040
+VCSSetCmd=VCS_CHECKLOG_ID,'vlog %b%e',0x8000040
+VCSSetCmd=VCS_CHECKPROP_ID,'vlog -b %b%e',0x8000040
+VCSSetCmd=VCS_CHECKDIFF_ID,'vdiff -r %b%e',0x8000040
+VCSSetCmd=VCS_CHECKMENU_ID,'pvcsvmwn',0x8000000
+VCSSetCmd=VCS_ADD_ID,'vcs -i -t@%Q %b%e',0x8000040
+VCSSetCmd=VCS_REMOVE_ID,'del /f %b%{??v|___}e',0x8000040
+
+[Files]
+C:\Hawk\TCWINLIB\wintest.c
+C:\Hawk\TCWINLIB\libtest.c
+C:\MWOSx86\OS9000\SRC\DEFS\termcap.h
+C:\MWOSx86\OS9000\SRC\DEFS\types.h
+C:\MWOSx86\OS9000\SRC\DEFS\strings.h
+C:\Hawk\TCWINLIB\tcwin.h
+C:\Hawk\TCWINLIB\tclib.h
+C:\MWOSx86\SRC\DEFS\ansi_c.h
+C:\MWOSx86\SRC\DEFS\stdio.h
+C:\Hawk\TCWINLIB\winfo.c
+C:\Hawk\TCWINLIB\underline.c
+C:\Hawk\TCWINLIB\termstuff.c
+C:\Hawk\TCWINLIB\startup.c
+C:\Hawk\TCWINLIB\show.c
+C:\Hawk\TCWINLIB\select.c
+C:\Hawk\TCWINLIB\reverse.c
+C:\Hawk\TCWINLIB\refresh.c
+C:\Hawk\TCWINLIB\print.c
+C:\Hawk\TCWINLIB\pathtowin.c
+C:\Hawk\TCWINLIB\owset.c
+C:\Hawk\TCWINLIB\movewin.c
+C:\Hawk\TCWINLIB\misc.c
+C:\Hawk\TCWINLIB\makewin.c
+C:\Hawk\TCWINLIB\killwin.c
+C:\Hawk\TCWINLIB\insertwin.c
+C:\Hawk\TCWINLIB\history.c
+C:\Hawk\TCWINLIB\getwh.c
+C:\Hawk\TCWINLIB\cwarea.c
+C:\Hawk\TCWINLIB\curxy.c
+C:\Hawk\TCWINLIB\color.c
+C:\Hawk\TCWINLIB\clear.c
+C:\Hawk\TCWINLIB\bold.c
+C:\Hawk\TCWINLIB\blink.c

@@ -1,0 +1,376 @@
+Function List for termcap windowing library:
+--------------------------------------------
+
+=============================== User Functions ===============================
+
+User Startup/Shutdown Functions:
+--------------------------------
+
+int WinStartup(x, y, w, h, f, b)
+int x,y,w,h,f,b;
+
+	Create initial window buffers and main screen.  Returns a path number
+associated with the main window, or ERROR if unable to create.
+
+	References: 	setupTermcap(), MakeWin(), KillWin(), InitWindow(),
+					ShowAll()
+
+
+WinShutDown(wpath)
+int wpath;
+
+	Kills main screen specified by wpath then releases initial window buffers.
+
+	References:		KillWin(), destructTermcap()
+
+
+KillWin(wpath)
+int wpath;
+
+	Deletes specified window, or returns ERROR if unable to locate window.
+
+	References:		ShowChanges()
+
+
+int MakeWin(x,y,w,h,f,b)
+int x,y,w,h,f,b;
+
+	Creates a new overlay window and returns a path associated with it,
+or ERROR if unable to create window.
+
+	References:		InitWindow(), InsertWin(), GetAvail()
+
+
+User Output Functions:
+----------------------
+
+int PrintAt(wpath,x,y,text)
+int wpath,x,y;
+char *text;
+
+	Displays text message at specified position on window associated
+with wpath, or returns ERROR if unable to do so.  (Works like fputs.)
+
+	References:		Print()
+
+
+int Print(wpath,text)
+int wpath;
+char *text;
+
+	Displays text message on specified window at current cursor
+position, or returns ERROR if unable to do so.
+
+	References:		Output(), ShowChanges()
+
+
+Refresh(mode)
+char mode;
+
+	Force a refresh/update of the screen.
+
+	References:		ShowChanges()
+
+
+RefreshOn()
+
+	Turn off automatic screen updates.  Use Refresh() when you want them.
+
+	References:		none
+
+
+RefreshOff()
+
+	Turn on automatic screen updates.
+
+	References:		none
+
+
+WInfo(wpath)
+int wpath;
+
+	Displays list of currently system windows to specified window path.
+	
+	References:		Print()
+
+
+User MISC. CGFX Calls:
+----------------------
+
+Bell(wpath)
+int wpath;
+
+	Beep!  (not currently implemented)
+
+
+int BlnkOn(wpath)
+int BlnkOff(wpath)
+int wpath;
+
+	Turn blinking text attribute on or off.
+
+
+BoldSw(wpath,bsw)
+int wpath,bsw;
+
+	Turn boldface on (bsw==1) or off (bsw==0).
+
+
+int Clear(wpath)
+int wpath;
+
+	Clears specified window, or returns ERROR if unable to locate window.
+
+	References:		PathToWin()
+
+
+CurHome(wpath)
+int wpath;
+
+	Move cursor to home position.
+
+	References:		PathToWin()
+
+CurOn(wpath)
+CurOff(wpath)
+int wpath;
+
+	Not currently implemented (not many terminals support this anyway).
+
+	References:		PathToWin()
+
+
+CurUp(wpath)
+CurDwn(wpath)
+CurLft(wpath)
+CurRgt(wpath)
+int wpath;
+
+	Move cursor up, down, left or right one position.
+
+	References:		PathToWin()
+
+
+CurRtn(wpath)
+int wpath;
+
+	Move cursor to start of current line (C/R without line feed).
+
+	References:		PathToWin()
+
+
+CurXY(wpath,x,y)
+int wpath,x,y;
+
+	Move cursor to X,Y position within current working area.
+
+	References:		PathToWin()
+
+
+CWArea(wpath,cpx,cpy,szx,szy)
+int wpath,cpx,cpy,szx,szy;
+
+	Change working area within current window (or overlay).
+	cpx,cpy = X,Y position of new working area
+	szx,szy = width and height of new working area
+	To restore back to full size, you must CWArea() back to that size :)
+
+
+DelLine(wpath)
+int wpath;
+
+	Delete current line, moving all lines below it up by one, and creating
+	a blank line at the bottom of the working area.
+
+
+ErEOLine(wpath)
+int wpath;
+
+	Erase (blankk out) any text from current cursor position to end of
+	current line (within working area).
+
+	References:		PathToWin()
+
+
+ErEOScrn(wpath)
+int wpath;
+
+	Erase all lines below current line.  Implimented wrong???
+
+	References:		PathToWin()
+
+
+ErLine(wpath)
+int wpath;
+
+	Erase (blank out) any text on current line of working area.
+
+	References:		PathToWin()
+
+
+int FColor(wpath, color)
+int BColor(wpath, color)
+
+	Set specified window to output using that code.
+
+
+InsLin(wpath)
+int wpath;
+
+	Insert new line at current cursor position, moving everything else
+	down the screen one line (and losing whatever happened to be on the
+	bottom line).
+
+
+OWEnd(wpath)
+int wpath;
+
+	Destroy last overlay window created, restoring what was under it.
+
+
+OWSet(wpath,svs,cpx,cpy,szx,szy,fprn,bprn)
+int wpath,svs,cpx,cpy,szx,szy,fprn,bprn;
+
+	Create an overlay window (CGFX version, stacked) on top of current
+	area.
+		svs = not used, underlying window is always saved
+		cpx,cpy = X,Y starting position for overlay window
+		szx,szy = width and height of overlay window
+		fprn,bprn = foreground and background overlay window colors
+
+
+int ReVOn(wpath)
+int ReVOff(wpath)
+
+	Set specified window to output in reverse/normal vide.
+
+
+int Select(wpath)
+int wpath;
+
+	Bring specified window to top of screen, or return ERROR if unable
+to do so.
+
+	References:		PathToWin(), ShowChanges()
+
+
+int UndlnOn(wpath)
+int UndlnOff(wpath)
+
+
+============================== System Functions ==============================
+
+System Internal Window/Output Functions:
+----------------------------------------
+
+struct WINDOW* FindWin(wpath)
+int wpath;
+
+	Returns a WINDOW pointer to the one associated with wpath, or NULL
+if unable to locate that window number.
+
+	References:		none
+
+
+struct WINDOW* PathToWin(wpath)
+int wpath;
+
+	Returns a WINDOW pointer to the one associated with wpath, or a
+pointer to the currently displayed window if STDOUT specified, or NULL
+if unable to locate that window number.
+
+	References:		FindWin()
+
+
+InitWindow(tmp)
+struct WINDOW *tmp;
+
+	Initializes/resets text, attribute, and color buffers of specified
+window.
+
+
+int GetAvail()
+
+	Returns next available window path number.
+
+	References:		none
+
+
+InsertWin(tmp)
+struct WINDOW *tmp;
+
+	Inserts specified window into current position of window stack.
+
+	References:		none
+
+
+Output(tmp, text, cr)
+struct WINDOW *tmp;
+char *text;
+char cr; /* TRUE == append carraige return */
+
+	Places text message with attributes in specified window structure's
+buffer and will optionally append a carraige return based on status of
+the cr flag.
+
+	References:		ScrollWindow()
+
+
+ScrollWindow(tmp)
+struct WINDOW *tmp;
+
+	Scrolls the specified window structure's text, attribute, and color buffers.
+
+	References:		none
+
+
+int AllWinToBuf()
+
+	Pushes all windows to the main display buffer, or returns ERROR if
+no windows exist.
+
+	References:		WinToBuf()
+
+
+WinToBuf(tmp)
+struct WINDOW *tmp;
+
+	Pushes specified window to the main display buffer.
+
+	References:		none
+
+
+ShowAll()
+
+	Redisplays the entire main display buffer (global refresh).
+
+	References:		none
+
+
+DupMainBuffer()
+
+	Copy main display buffer to delta display buffer.
+
+	References:		none
+
+ShowChanges(mode)
+char mode;
+
+	Update main display to show any changes made to the entire screen
+(if mode == ALL_WIN) or just the current window (if mode == STDOUT).
+
+	References:		AllWinToBuf(), setcursor(), ChangeAttr(), ChangeColor(),
+					DupMainBuffer()
+
+
+ChangeAttr(attr)
+char attr;
+
+	Output control codes to establish current attribute settings.
+
+	References:		blinkon/off(), underlineon/off, etc...
+
+
+ChangeColor(color)
+
+	See above
