@@ -1,0 +1,3 @@
+echo Archiving everything (EthaWin library) ...
+lha a ..../ethalib *
+

@@ -1,0 +1,2 @@
+cc -t=/r0 -f=MegaBan megaban.r mbancfg.r chooser.r megabanvars.r -l=/dd/lib/mfonts.l -l=/dd/lib/ethawin.l -l=/dd/lib/cgfx.l
+

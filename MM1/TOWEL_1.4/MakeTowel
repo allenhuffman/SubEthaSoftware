@@ -1,0 +1,2 @@
+echo Linking Towel with EthaWin library . . .
+cc -f=Towel main.r process.r iobox.r system.r drivepath.r towelcfg.r towelvars.r -l=/dd/lib/ethawin.l -l=/dd/lib/cgfx.l -t=/r0

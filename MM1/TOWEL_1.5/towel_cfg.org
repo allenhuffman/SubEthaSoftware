@@ -1,0 +1,40 @@
+*
+* Towel configuration file - located in /DD/SYS/ETHAWIN
+*
+* "Commands" can be up to 20 characters long, including parameters.
+*
+* FILE Menu:
+*
+Copy=copy
+Delete=del
+FileInfo=attr
+Rename=rename
+*
+* DISK Menu:
+*
+Backup=backup
+Cobbler=cobbler
+Dcheck=dcheck -w=/r0
+Format=format
+DiskInfo=free
+*
+* DIRECTORY Menu:
+*
+DelDir=deldir
+MakeDir=makdir
+*
+* MISC Menu:
+*
+* User1=
+* User2=
+* User3=
+* User4=
+* User5=
+* User6=
+* User7=
+* User8=
+*
+* MISC Functions:
+*
+ShowHidden=Yes
+SortDir=Yes

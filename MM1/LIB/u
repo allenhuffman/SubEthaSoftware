@@ -1,0 +1,5 @@
+3/8/96 -
+
+Rename all functions to begin internally with EWfunc to prevent
+conflicts with user app functions.
+

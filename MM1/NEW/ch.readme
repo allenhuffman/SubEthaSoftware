@@ -1,0 +1,18 @@
+Allen,
+
+Here's my latest versions (except for ewfpick) of the library.  At least
+those functions I've either changed or written.  I've also included the
+modified .h files and my stdinc.h (just in case <g>).  The current version
+of EwFPick() that I've been working on still has problems, I'm working on
+them.  The new function uses dynamic memory allocation to deal with the
+file list as opposed to an array.  I'm not sure if it'll save anything
+or not, but it's good practice <g>.  If I get it working, I'll send
+it along.
+
+All the modifications to your functions have been noted in the function
+comments.  I've also added my functions to the docs and made some minor
+corrections to them.
+
+If you have any problems, just let me know.  
+
+    Chris

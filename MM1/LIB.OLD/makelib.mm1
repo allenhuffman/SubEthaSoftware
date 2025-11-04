@@ -1,0 +1,13 @@
+*
+* BlackHawk MM/1 OSK version
+*
+* Script to merge ethawin .r files into the EthaWin.l file.
+*
+* 1.00 03/17/95 - new version
+*
+echo Deleting old EthaWin.l file . . .
+-nx
+del /dd/lib/ethawin.l
+-x
+echo Merging EthaWin.r files into EthaWin.l file . . . hang on . . .
+merge -b=100 startup.r config.r mouse.r menu.r yesno.r popup.r pulldown.r endwin.r toptext.r printat.r snooze.r wait.r lineinput.r misc.r>/dd/lib/ethawin.l
