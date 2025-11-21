@@ -1,6 +1,6 @@
 ; dos.info
 
-option  offset 3800
+option  offset 3900
 
 data    2600-2601
 
