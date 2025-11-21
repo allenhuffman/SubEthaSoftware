@@ -1,58 +1,46 @@
-; /* Terry’s RS-DOS DOS startup code… 50 bytes */
+;****************************************************
+;* Used Labels                                      *
+;****************************************************
 
-; lwasm dos.asm -fbasic -odos.bas --map --list
+VD1     EQU     $00D1
+VD3     EQU     $00D3
+DCOPC   EQU     $00EA
+DCTRK   EQU     $00EC
+DCBPT   EQU     $00EE
+DCSTA   EQU     $00F0
+M0200   EQU     $0200
+M3800   EQU     $3800
+Z3900   EQU     $3900
+ZC004   EQU     $C004
+IOERROR EQU     $D709
 
-; Initial disassembly by Jerry "Super Basic" Stratton
-; More work done using EDTASM+ Z-BUG
-
-; Raw Bytes:
-;
-; 79,83,134,13,151,211,204,56,0,221,209,12,211,142,0,234,204,2,0,237,132,134,33,214,211,237,2,220,209,237,4,173,159,192,4,109,6,38,8,76,129,61,37,221,126,57,0,126,215,9,
-;
-; HEX Bytes:
-; 4F,53,86,D,97,D3,CC,38,0,DD,D1,C,D3,8E,0,EA,CC,2,0,ED,84,0,86,21,D6,D3,ED,2,DC,D1,ED,4,AD,9F,C0,4,6D,6,26,8,4C,81,3D,25,0,DD,7E,39,0,7E,D7,9,
-;
-
-DSKCON  EQU     C004
-
-; 7E - CBUFAD RMB 2 - CASSETTE LOAD BUFFER POINTER
-
-
-        ORG     $25EF
-
-L25EF   FCB     0
-L25F0   FCB     0
+;****************************************************
+;* Program Code / Data Areas                        *
+;****************************************************
 
         ORG     $2600
 
-OS      FCB     'O
-        FCB     'S
-
-        LDA     #$D
-        STA     $D3         ; CBUFAD
-        LDD     #$3800
-        STD     $D1         ; VD1 - scratch pad vars
-        INC     $D3         ; VD3 - scratch pad vars
-        LDX     #$EA        ; DCOPC - DSKCON op code 0-3
-                            ; DCDRV - DSKCON drive number 0-3
-        LDD     #$200       ; 512? or...
-        STD     ,X          ; DCOPC=02, DCDRV=00
-        NEG     $86         ; GRBLOK - block for set/reset/point
-        BRN     L25EF
-        ADDD    $ED         ; DSEC - DSKCON sector number 1-18
-L261B   FCB     2           ; ??
-        LDD     $D1         ; VD1
-        STD     4,X         ; DCBPT - DSKCON data pointer
-        JSR     [$C004]     ; DSKCON
-        TST     6,X         ; DCSTA - DSKCON status byte
-        BNE     L2630
-        INCA
-        CMPA    #$3D        ; 61
-        BLO     L262D
-L262D   STD     $7E         ; CBUFAD - cassete load buffer pointer
-        RTS
-L2630   NEG     $7E         ; CBUFAD - cassete load buffer pointer
-        STB     $9          ; INPFLG - input flag (read=0, input<>0)
-        NEG     $0          ; ENDFLG - stop/end flag (+ stop, - end)
+        FCC     "OS"                     ;2600: 4F 53          'OS'
+        LDA     #$0D                     ;2602: 86 0D          '..'
+        STA     VD3                      ;2604: 97 D3          '..'
+        LDD     #M3800                   ;2606: CC 38 00       '.8.'
+Z2609   STD     VD1                      ;2609: DD D1          '..'
+        INC     VD3                      ;260B: 0C D3          '..'
+        LDX     #DCOPC                   ;260D: 8E 00 EA       '...'
+        LDD     #M0200                   ;2610: CC 02 00       '...'
+        STD     ,X   ; (DCOPC-DCOPC)     ;2613: ED 84          '..'
+        LDA     #$21                     ;2615: 86 21          '.!'
+        LDB     VD3                      ;2617: D6 D3          '..'
+        STD     DCTRK-DCOPC,X            ;2619: ED 02          '..'
+        LDD     VD1                      ;261B: DC D1          '..'
+        STD     DCBPT-DCOPC,X            ;261D: ED 04          '..'
+        JSR     [ZC004]                  ;261F: AD 9F C0 04    '....'
+        TST     DCSTA-DCOPC,X            ;2623: 6D 06          'm.'
+        BNE     Z262F                    ;2625: 26 08          '&.'
+        INCA                             ;2627: 4C             'L'
+        CMPA    #$3D                     ;2628: 81 3D          '.='
+        BCS     Z2609                    ;262A: 25 DD          '%.'
+        JMP     Z3900                    ;262C: 7E 39 00       '~9.'
+Z262F   JMP     IOERROR                  ;262F: 7E D7 09       '~..'
 
         END

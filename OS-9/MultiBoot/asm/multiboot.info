@@ -1,0 +1,46 @@
+; dos.info
+
+option  offset 3800
+
+data    2600-2601
+
+label   0071 RSTFLG
+label   00D1 VD1
+label   00D3 VD3
+
+; DSKCON
+label   00EA DCOPC
+label   00EB DCDRV
+label   00EC DCTRK
+label   00ED DSEC
+label   00EE DCBPT
+label   00F0 DCSTA
+
+; RAM
+;label   2600 DOSBUF
+
+;label   38F2 TIMER
+label   3911 GETKEY
+label   3932 UP
+label   39CF RETURN
+label   3949 DOWN
+label   3967 ENTER
+label   39D0 PRINT
+label   39E3 DOWN2
+
+; ROM
+label   8C1B DLOAD
+label   A000 POLCAT
+label   A002 CHROUT
+label   C004 DSKCON
+label   D709 IOERROR
+
+data    3816-3881
+code    3882-388B
+data    388C-38C6
+
+rel     3977-3978 00EA
+rel     397C-397D 00EA
+rel     3981-3982 00EA
+rel     3987-3988 00EA
+rel     398B-398D 00EA

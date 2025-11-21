@@ -1,0 +1,26 @@
+; dos.info
+
+option  offset 2600
+
+data    2600-2601
+
+label   00D1 VD1
+label   00D3 VD3
+
+; DSKCON
+label   00EA DCOPC
+label   00EB DCDRV
+label   00EC DCTRK
+label   00ED DSEC
+label   00EE DCBPT
+label   00F0 DCSTA
+
+; ROM
+label   D709 IOERROR
+
+rel     2613-2614 00EA
+rel     2619-261B 00EA
+rel     261D-261E 00EA
+rel     2623-2624 00EA
+
+;261f load indirect
