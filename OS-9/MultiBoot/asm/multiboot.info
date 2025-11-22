@@ -31,6 +31,7 @@ label   3A32 UP
 label   3ACF RETURN
 label   3A49 DOWN
 label   3A67 ENTER
+label   3A95 CPYLOOP2
 label   3AA8 GODOS
 label   3AAB PATCH32
 label   3AC1 PRTSTACK
@@ -70,5 +71,7 @@ rel     3A87-3A88 00EA
 rel     3A8B-3A8D 00EA
 rel     3AA4-3AA4 00EA
 ;rel     3982-3985 0400
+rel     3A9E-3A9F 00EA
+rel     3AA4-3AA5 00EA
 
 ;rmb     3A00-3B00
