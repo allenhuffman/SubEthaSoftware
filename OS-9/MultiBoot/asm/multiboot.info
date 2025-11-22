@@ -9,6 +9,7 @@ label   0071 RSTFLG
 label   0088 CURPOS
 label   00D1 VD1
 label   00D3 VD3
+label   01DA CASBUF
 
 ; DSKCON
 label   00EA DCOPC  ; DSKCON OPERATION CODE 0-3

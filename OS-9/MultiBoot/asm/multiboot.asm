@@ -14,7 +14,7 @@ DCBPT   EQU     $00EE
 DCSTA   EQU     $00F0
 M0155   EQU     $0155
 M0156   EQU     $0156
-M01DA   EQU     $01DA
+CASBUF  EQU     $01DA
 M0200   EQU     $0200
 M04A3   EQU     $04A3
 M04A4   EQU     $04A4
@@ -147,7 +147,7 @@ ENTER   LDB     DELAY1                   ;3A67: F6 3A EA       '.:.'
         STD     ,X   ; (DCOPC-DCOPC)     ;3A77: ED 84          '..'
         LDD     #M0001                   ;3A79: CC 00 01       '...'
         STD     DCTRK-DCOPC,X            ;3A7C: ED 02          '..'
-        LDD     #M01DA                   ;3A7E: CC 01 DA       '...'
+        LDD     #CASBUF                  ;3A7E: CC 01 DA       '...'
         STD     DCBPT-DCOPC,X            ;3A81: ED 04          '..'
         JSR     [DSKCON]                 ;3A83: AD 9F C0 04    '....'
         TST     DCSTA-DCOPC,X            ;3A87: 6D 06          'm.'
