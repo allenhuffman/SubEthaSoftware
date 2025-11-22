@@ -1,46 +1,74 @@
-; dos.info
+; multiboot.info
+; f9dasm multiboot.bin -info multiboot.info -noconv -out multiboot.asm
 
 option  offset 3900
 
 data    2600-2601
 
 label   0071 RSTFLG
+label   0088 CURPOS
 label   00D1 VD1
 label   00D3 VD3
 
 ; DSKCON
-label   00EA DCOPC
-label   00EB DCDRV
-label   00EC DCTRK
-label   00ED DSEC
-label   00EE DCBPT
-label   00F0 DCSTA
+label   00EA DCOPC  ; DSKCON OPERATION CODE 0-3
+label   00EB DCDRV  ; DSKCON DRIVE NUMBER 0—3
+label   00EC DCTRK  ; DSKCON TRACK NUMBER 0—34
+label   00ED DSEC   ; DSKCON SECTOR NUMBER 1-18
+label   00EE DCBPT  ; DSKCON DATA POINTER
+label   00F0 DCSTA  ; DSKCON STATUS BYTE
 
 ; RAM
-;label   2600 DOSBUF
+label   0400 VIDRAM
+label   2600 OS
+label   2602 DOS
 
-;label   38F2 TIMER
-label   3911 GETKEY
-label   3932 UP
-label   39CF RETURN
-label   3949 DOWN
-label   3967 ENTER
-label   39D0 PRINT
-label   39E3 DOWN2
+label   3900 START
+label   3907 CPYLOOP 
+label   3A08 DLYLOOP
+label   3A11 GETKEY
+label   3A32 UP
+label   3ACF RETURN
+label   3A49 DOWN
+label   3A67 ENTER
+label   3AA8 GODOS
+label   3AAB PATCH32
+label   3AC1 PRTSTACK
+label   3AC3 PRTLOOP
+label   3ACD RETSTACK
+label   3AD0 PRINT
+label   3ADA GOIOERR
+label   3AE3 DOWN2
+label   3AEA DELAY1
+label   3AEB DELAY2
+label   3AFD DELAY
+label   3AFF CHOICES
+;label   3B00 STORAGE
 
 ; ROM
 label   8C1B DLOAD
+label   95C9 VDGPATCH 
 label   A000 POLCAT
 label   A002 CHROUT
+label   A928 CLS
 label   C004 DSKCON
 label   D709 IOERROR
+label   F652 COL32
+label   FF22 VDGPIA
+label   FFBC FOREPAL32
 
-data    3816-3881
-code    3882-388B
-data    388C-38C6
+data    3916-3981
+code    3982-398B
+data    398C-39C6
+data    3AEA-3AFF
+word    3AFD
 
-rel     3977-3978 00EA
-rel     397C-397D 00EA
-rel     3981-3982 00EA
-rel     3987-3988 00EA
-rel     398B-398D 00EA
+rel     3A77-3A78 00EA
+rel     3A7C-3A7D 00EA
+rel     3A81-3A82 00EA
+rel     3A87-3A88 00EA
+rel     3A8B-3A8D 00EA
+rel     3AA4-3AA4 00EA
+;rel     3982-3985 0400
+
+;rmb     3A00-3B00
